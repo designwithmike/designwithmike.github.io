@@ -73,8 +73,6 @@ export const site = {
    like '/builds/life-board.webp'. Without one, a grey placeholder shows. */
 export type Build = {
   name: string;
-  /* small label above the name: where it lives */
-  where: string;
   problem: string;
   fix: string;
   image?: string;
@@ -103,7 +101,6 @@ export const buildsPage = {
 export const builds: Build[] = [
   {
     name: 'Family Hub',
-    where: 'Kitchen TV',
     gradient: true,
     shots: [
       { src: '/builds/family-hub-moms-calendar.jpg', alt: "Family Hub home screen with the weather, a daily summary, local events and the shared family calendar" },
@@ -113,23 +110,21 @@ export const builds: Build[] = [
       { src: '/builds/family-hub-clip-a.mp4', alt: 'A child tracing the letter A on the Family Hub alphabet screen' },
     ],
     problem: 'Our family info lived in too many places.',
-    fix: 'A family hub on the kitchen TV. It shows the shared calendar and weather, plus an alphabet and chores for the kids, who earn stars.',
+    fix: 'A webOS family hub app for my LG StanbyME. It shows our color-coded family calendar and has letter flash cards with tracing for my kids. I gave Muse, my AI agent, the job of keeping the board updated. I message Muse to make changes, and it summarizes our day and pulls in local events so we can plan our weekends.',
   },
   {
     name: 'Screenshot Renamer',
-    where: 'Mac',
     video: '/builds/screenshot-renamer.mp4',
     alt: 'A new screenshot of a Knicks cap lands on the desktop as "CleanShot 2026..." and is renamed to "product-photo-knicks-cap"',
-    problem: 'Every screenshot saved with a generic name, so finding one later meant opening them one by one.',
-    fix: 'A small Mac app that has Claude look at each new screenshot and rename it, like "product-photo-knicks-cap."',
+    problem: 'Every screenshot saved with a generic name, so finding the right one meant opening every file.',
+    fix: 'A small automation on my Mac that uses Claude Haiku to review each new screenshot and rename it, like "product-photo-knicks-cap."',
   },
   {
     name: 'Popstream',
-    where: 'LG TV app',
     image: '/builds/popstream-live-tv.jpg',
     alt: 'Popstream Live TV screen with a video preview of the current show in the top left and a channel guide beside it',
-    problem: "Existing IPTV players are overcomplicated and confusing, and they're not native to webOS.",
-    fix: 'A webOS app for my LG TV that plays my IPTV playlists. It has live TV with a guide, plus a For You row of recommendations.',
+    problem: "IPTV players are confusing, and they're not native to webOS.",
+    fix: 'A native webOS IPTV player, simplified to feel like cable TV. No third-party devices needed.',
   },
 ];
 
