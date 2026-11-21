@@ -167,9 +167,9 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                   <div class="pc__device">
                     <div class="pc__phone">
                       <div class="pc__screen">
-                        <img class="pc__shot pc__shot--scroll" src={s.before.src} alt={s.before.alt} loading="lazy" />
+                        <img class="pc__shot pc__shot--scroll" src={s.before.src} alt={s.before.alt} loading="eager" />
                       </div>
-                      <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                      <img class="pc__frame" src={s.frame} alt="" loading="eager" />
                     </div>
                   </div>
                 </div>
@@ -178,10 +178,10 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                   <div class="pc__device">
                     <div class="pc__phone">
                       <div class="pc__screen">
-                        <img class="pc__shot" src={s.after[0].src} alt={s.after[0].alt} loading="lazy" />
-                        <img class="pc__shot pc__shot--next" src={s.after[1].src} alt={s.after[1].alt} loading="lazy" />
+                        <img class="pc__shot" src={s.after[0].src} alt={s.after[0].alt} loading="eager" />
+                        <img class="pc__shot pc__shot--next" src={s.after[1].src} alt={s.after[1].alt} loading="eager" />
                       </div>
-                      <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                      <img class="pc__frame" src={s.frame} alt="" loading="eager" />
                     </div>
                     <span class="pc__dots">
                       <button class="pc__step" type="button" data-step="0" aria-label="Show the first screen">
