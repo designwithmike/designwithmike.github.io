@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import { buildsPage, builds } from '../data/site';
+import type { Build } from '../data/site';
+
+/* Builds on the gradient show their vertical screenshots; with none added
+   yet, three empty portrait boxes hold the place. */
+const shotsFor = (b: Build) => b.shots ?? (b.gradient ? [null, null, null] : null);
+---
+
+<Base title={buildsPage.title}>
+  <!-- the serif used on the home page (Zodiak Thin), for the headline -->
+  <Fragment slot="head">
+    <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
+  </Fragment>
+  <main class="builds wrap">
+    <!-- Back to the home page -->
+    <div class="back">
+      <a class="label link" href="/">← Back</a>
+    </div>
+
+    <h1 class="builds__intro">{buildsPage.intro}</h1>
+
+    <!-- One row per build: screenshot on the left, the story on the right -->
+    <div class="builds__list">
+      {
+        builds.map((b) => (
+          <article class="build">
+            <div class:list={['build__media', { 'build__media--gradient': shotsFor(b) }]}>
+              {shotsFor(b) ? (
+                <div class="shots">
+                  {shotsFor(b)!.map((s) =>
+                    s ? (
+                      <img class="shot" src={s.src} alt={s.alt} loading="lazy" />
+                    ) : (
+                      <div class="shot shot--empty" aria-hidden="true">
+                        <span class="label">Screenshot</span>
+                      </div>
+                    ),
+                  )}
+                  {b.clips?.map((c) => (
+                    <video class="shot" src={c.src} aria-label={c.alt} autoplay muted loop playsinline preload="metadata" />
+                  ))}
+                </div>
+              ) : b.video ? (
+                <video src={b.video} aria-label={b.alt ?? b.name} autoplay muted loop playsinline preload="metadata" />
+              ) : b.image ? (
+                <img src={b.image} alt={b.alt ?? b.name} loading="lazy" />
+              ) : (
+                <div class="ph" aria-hidden="true">
+                  <span class="label">Screenshot</span>
+                </div>
+              )}
+            </div>
+            <div class="build__text">
+              <span class="label soft">{b.where}</span>
+              <h2 class="build__name">{b.name}</h2>
+              <dl class="build__story">
+                <div>
+                  <dt class="label soft">Problem</dt>
+                  <dd>{b.problem}</dd>
+                </div>
+                <div>
+                  <dt class="label soft">Fix</dt>
+                  <dd>{b.fix}</dd>
+                </div>
+              </dl>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </main>
+  <Footer builds={false} />
+</Base>
+
+<style>
+  .builds {
+    max-width: calc(var(--content-max) + var(--gutter) * 2);
+    margin-inline: auto;
+  }
+
+  /* "← Back" sits in a 64px strip at the top, same as the case studies */
+  .back {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    margin-bottom: 32px;
+  }
+
+  /* same serif as the home page bio */
+  .builds__intro {
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100; /* Zodiak Thin */
+    font-size: clamp(30px, 3.6vw, 48px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 760px;
+    text-wrap: pretty;
+  }
+
+  .builds__list {
+    margin-top: 72px;
+    margin-bottom: 96px;
+  }
+
+  .build {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 48px;
+    align-items: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .build__media {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #dde2e2;
+  }
+
+  .build__media img,
+  .build__media video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* A grayscale version of the home page hero gradient, as a simple blend
+     (no blur or grain), with vertical screens floating on it */
+  .build__media--gradient {
+    padding: clamp(16px, 2.5vw, 24px);
+    background:
+      radial-gradient(60% 70% at 12% 95%, #2b2b2b 0%, transparent 70%),
+      radial-gradient(55% 60% at 92% 8%, #8c8c8c 0%, transparent 70%),
+      radial-gradient(50% 60% at 72% 95%, #4a4a4a 0%, transparent 70%),
+      linear-gradient(160deg, #a6a6a6 0%, #3a3a3a 100%);
+    /* keep the gradient out from under the 1px border, otherwise the border
+       tints and the bottom edge of the gradient wraps around to the top */
+    background-clip: padding-box;
+  }
+
+  .shots {
+    display: flex;
+    justify-content: center;
+    gap: clamp(12px, 2vw, 20px);
+  }
+
+  .shot {
+    flex: 1 1 0;
+    min-width: 0;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(34, 34, 34, 0.18);
+  }
+
+  /* empty portrait box until a real screenshot is dropped in */
+  .shot--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--ink-soft);
+  }
+
+  /* placeholder box until a real screenshot is dropped in */
+  .build__media .ph {
+    border-radius: 0;
+    background: #dde2e2;
+    color: var(--ink-soft);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .build__name {
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100;
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 6px 0 28px;
+  }
+
+  .build__story {
+    margin: 0;
+    display: grid;
+    gap: 20px;
+  }
+
+  .build__story dd {
+    margin: 4px 0 0;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 300;
+  }
+
+  @media (max-width: 800px) {
+    .build {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 32px 0;
+    }
+
+    .builds__list {
+      margin-top: 48px;
+    }
+  }
+</style>

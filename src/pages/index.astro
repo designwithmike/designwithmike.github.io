@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, projects } from '../data/site';
+import { site, projects, buildsPage } from '../data/site';
 import ProjectCover from '../components/ProjectCover.astro';
 
 /* A 12-column grid. The top row is the hero (9 columns) with the impact
@@ -30,6 +30,8 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
         <a class="contact__email link" href={`mailto:${site.email}`} data-copy={site.email}>{site.email}</a>
         <div class="contact__socials">
           {site.socials.map((s) => <a class="label link" href={s.href}>{s.label} ↗</a>)}
+          <!-- stays on this site, so a plain arrow instead of ↗ -->
+          <a class="label link" href="/builds">{buildsPage.linkLabel} →</a>
         </div>
       </div>
     </section>
@@ -123,8 +125,8 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
     justify-content: center;
     align-items: flex-start;
     gap: clamp(20px, 4vh, 40px);
-    /* 120px either side of the copy; top and bottom shrink on shorter screens */
-    padding: clamp(24px, 6vh, 120px) 120px;
+    /* 72px either side of the copy; top and bottom shrink on shorter screens */
+    padding: clamp(24px, 6vh, 120px) 72px;
     background: #fff6f4;
   }
 
@@ -210,7 +212,7 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
     gap: 6px;
   }
 
-  /* LinkedIn and Dribbble side by side, under the email */
+  /* LinkedIn and Personal AI builds side by side, under the email */
   .contact__socials {
     display: flex;
     flex-wrap: wrap;

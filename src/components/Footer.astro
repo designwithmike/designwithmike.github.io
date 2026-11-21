@@ -1,16 +1,19 @@
 ---
-import { site } from '../data/site';
+import { site, buildsPage } from '../data/site';
 
 interface Props {
   dark?: boolean;
+  /* the Personal AI builds link; the builds page turns it off for itself */
+  builds?: boolean;
 }
 
-const { dark = false } = Astro.props;
+const { dark = false, builds = true } = Astro.props;
 ---
 
 <footer class:list={['footer wrap', { 'footer--dark': dark }]}>
   <div class="footer__inner">
     <div class="footer__links">
+      {builds && <a class="label link" href="/builds">{buildsPage.linkLabel}</a>}
       {site.socials.map((s) => <a class="label link" href={s.href}>{s.label}</a>)}
     </div>
   </div>

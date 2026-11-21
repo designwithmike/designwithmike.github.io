@@ -46,14 +46,13 @@ export const site = {
   /* The hero wraps on its own, so write it as one sentence or two.
      Around 120–200 characters fills it nicely. */
   hero:
-    'Lead Product Designer for LG Electronics DTC e-commerce platform. Using AI and data to simplify the shopping experience.',
+    'I lead product design for LG.com, using data and AI to make it easier for people to find and buy the right product.',
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
   caseStudyCta: 'For a walkthrough of the end-to-end process, just reach out.',
   workYears: '(20XX–20XX)',
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mikemendez11' },
-    { label: 'Dribbble', href: 'https://dribbble.com/3rdculturekid' },
   ],
   /* Big numbers in a strip on the home page, between the intro and the
      project cards */
@@ -66,6 +65,73 @@ export const site = {
     ],
   },
 };
+
+/* ----- Personal AI builds page (/builds) -----
+   Light and fun: a pain point, the fix, and a screenshot for each build.
+   To show a screenshot or clip, drop the file in /public/builds and add
+   `image` (a picture) or `video` (a muted looping clip) with its path,
+   like '/builds/life-board.webp'. Without one, a grey placeholder shows. */
+export type Build = {
+  name: string;
+  /* small label above the name: where it lives */
+  where: string;
+  problem: string;
+  fix: string;
+  image?: string;
+  video?: string;
+  /* describes the screenshot for screen readers */
+  alt?: string;
+  /* Vertical screenshots floating side by side on a grayscale gradient
+     (the home page hero gradient, in gray). Add one entry per screenshot, with the
+     file in /public/builds. With `gradient: true` and no shots yet, three
+     empty portrait boxes show where they will go. */
+  gradient?: boolean;
+  shots?: { src: string; alt: string }[];
+  /* Short looping video snippets (about 7 seconds each, muted) shown as extra
+     portrait slots after the screenshots, in the same gradient panel. Files go
+     in /public/builds as .mp4. */
+  clips?: { src: string; alt: string }[];
+};
+
+export const buildsPage = {
+  title: 'Personal AI builds',
+  intro: "How I've used AI to solve personal pain points in my life",
+  /* the link on the home page and in the footer */
+  linkLabel: 'Personal AI builds',
+};
+
+export const builds: Build[] = [
+  {
+    name: 'Family Hub',
+    where: 'Kitchen TV',
+    gradient: true,
+    shots: [
+      { src: '/builds/family-hub-moms-calendar.jpg', alt: "Family Hub home screen with the weather, a daily summary, local events and the shared family calendar" },
+    ],
+    clips: [
+      { src: '/builds/family-hub-clip-u.mp4', alt: 'A child tracing the letter U on the Family Hub alphabet screen' },
+      { src: '/builds/family-hub-clip-a.mp4', alt: 'A child tracing the letter A on the Family Hub alphabet screen' },
+    ],
+    problem: 'Our family info lived in too many places.',
+    fix: 'A family hub on the kitchen TV. It shows the shared calendar and weather, plus an alphabet and chores for the kids, who earn stars.',
+  },
+  {
+    name: 'Screenshot Renamer',
+    where: 'Mac',
+    video: '/builds/screenshot-renamer.mp4',
+    alt: 'A new screenshot of a Knicks cap lands on the desktop as "CleanShot 2026..." and is renamed to "product-photo-knicks-cap"',
+    problem: 'Every screenshot saved with a generic name, so finding one later meant opening them one by one.',
+    fix: 'A small Mac app that has Claude look at each new screenshot and rename it, like "product-photo-knicks-cap."',
+  },
+  {
+    name: 'Popstream',
+    where: 'LG TV app',
+    image: '/builds/popstream-live-tv.jpg',
+    alt: 'Popstream Live TV screen with a video preview of the current show in the top left and a channel guide beside it',
+    problem: "Existing IPTV players are overcomplicated and confusing, and they're not native to webOS.",
+    fix: 'A webOS app for my LG TV that plays my IPTV playlists. It has live TV with a guide, plus a For You row of recommendations.',
+  },
+];
 
 export type Section =
   | { type: 'titled'; title: string; columns: { heading: string; paragraphs: string[] }[] }
