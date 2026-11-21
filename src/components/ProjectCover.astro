@@ -1,0 +1,263 @@
+---
+import type { Project } from '../data/site';
+
+interface Props {
+  project: Project;
+  /* fixed shape for the "more projects" cards */
+  ratio?: string;
+  /* fill the whole parent instead (home page cards, where the title sits on
+     top of the cover), leaving room at the bottom for that title */
+  fill?: boolean;
+}
+
+const { project, ratio = '16 / 9', fill = false } = Astro.props;
+
+/* The cover is a small version of the case study's hero (its first section):
+   the floating clip on its background, or the phones on theirs. Projects
+   without one keep the placeholder box. */
+const hero = project.sections[0];
+const framed = hero?.type === 'image' && hero.frame && (hero.video || hero.image) ? hero : undefined;
+const phones = hero?.type === 'phones' && hero.frame ? hero : undefined;
+const isVideo = (src: string) => src.endsWith('.mp4');
+const toNumber = (r: string) => {
+  const [a, b] = r.split('/').map(Number);
+  return a / b;
+};
+const clipRatio = framed?.mediaRatio ?? '16 / 10';
+/* home page tiles can zoom in on part of the clip (see homeCrop in site.ts) */
+const crop = fill ? project.homeCrop : undefined;
+const cropVars = crop
+  ? `--cw:${crop.width};--cx:${crop.left};--cy:${crop.top};--nx:${crop.nudgeX ?? 0}px;`
+  : fill && project.homeZoom
+    ? `--z:${project.homeZoom};`
+    : '';
+const shape = fill ? '' : `aspect-ratio:${ratio};`;
+
+/* Phones: the first one large in the middle with the next two smaller on
+   either side, tucked behind it. On the "more projects" cards the middle
+   phone is about 76% of the card's height. */
+const trio = (phones?.phones.length ?? 0) >= 3;
+const shown = !phones
+  ? []
+  : trio
+    ? [
+        { ...phones.phones[1], side: true, start: false },
+        { ...phones.phones[0], side: false, start: true },
+        { ...phones.phones[2], side: true, start: false },
+      ]
+    : [{ ...phones.phones[0], side: false, start: true }];
+/* the home page tile can start its phone clip partway through */
+const clipStart = fill && project.homeClipStart ? `#t=${project.homeClipStart}` : '';
+const centreWidth = fill ? '' : `--pw:${((0.76 / toNumber(ratio)) * (397 / 837) * 100).toFixed(2)}%;`;
+---
+
+{
+  framed ? (
+    <div class:list={['cover', { 'cover--fill': fill, 'cover--crop': !!crop }]} style={`${shape}${cropVars}background-image:url(${framed.frame})`}>
+      {framed.video ? (
+        <video
+          class="cover__clip"
+          src={`${framed.video}${clipStart}`}
+          style={`aspect-ratio:${clipRatio};--r:${toNumber(clipRatio)}`}
+          aria-label={framed.label}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        />
+      ) : (
+        <img
+          class="cover__clip"
+          src={framed.image}
+          alt={framed.label}
+          loading="lazy"
+          style={`aspect-ratio:${clipRatio};--r:${toNumber(clipRatio)}`}
+        />
+      )}
+    </div>
+  ) : phones ? (
+    <div class:list={['cover cover--phones', { 'cover--fill': fill, 'cover--trio': trio }]} style={`${shape}${centreWidth}background-image:url(${phones.background})`}>
+      {shown.map((p) => (
+        <div class:list={['cover__phone', { 'cover__phone--side': p.side }]}>
+          <div class="cover__screen">
+            {isVideo(p.src) ? (
+              <video class="cover__shot" src={`${p.src}${p.start ? clipStart : ''}`} aria-label={p.alt} autoplay muted loop playsinline preload="metadata" />
+            ) : (
+              <img class="cover__shot" src={p.src} alt={p.alt} loading="lazy" />
+            )}
+          </div>
+          <img class="cover__frame" src={phones.frame} alt="" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  ) : fill ? (
+    <div class="ph cover-ph--fill" style={`--hue:${project.hue}`} />
+  ) : (
+    <div class="ph" style={`--hue:${project.hue}; aspect-ratio:${ratio}`}>
+      <span class="label">Cover image</span>
+    </div>
+  )
+}
+
+<style>
+  .cover {
+    display: grid;
+    place-items: center;
+    background: #dde2e2 center / cover no-repeat;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .card:hover .cover {
+    transform: scale(1.03);
+  }
+
+  /* The clip floats on the background like the case study hero */
+  .cover__clip {
+    display: block;
+    width: 84%;
+    height: auto;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    background: transparent;
+  }
+
+  /* Phones: same frame and screen shape as the case study (see [slug].astro) */
+  /* Same spacing as the case study rows: the gap is about half a phone's
+     width (9% gap to 17.5% phones there) */
+  .cover--phones {
+    --pw: 20.8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--pw) * 0.514);
+  }
+
+  .cover__phone {
+    position: relative;
+    width: var(--pw);
+    aspect-ratio: 397 / 837;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+  }
+
+  .cover__screen {
+    position: absolute;
+    left: calc(11 / 397 * 100%);
+    top: calc(11 / 810 * 100%);
+    width: calc(374 / 397 * 100%);
+    height: calc(787 / 810 * 100%);
+    border-radius: 5.4% / 2.6%;
+    overflow: hidden;
+    background: #f6f3eb;
+  }
+
+  .cover__shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+  }
+
+  .cover__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* "More projects" card: one large phone with two smaller ones beside it */
+  /* The side phones tuck slightly behind the main one */
+  .cover--trio {
+    gap: 0;
+    overflow: hidden; /* in case the side phones reach the edges */
+  }
+
+  .cover--trio .cover__phone {
+    flex-shrink: 0;
+  }
+
+  .cover--trio .cover__phone:not(.cover__phone--side) {
+    z-index: 1;
+  }
+
+  .cover--trio .cover__phone--side:first-child {
+    margin-right: calc(var(--pw) * -0.18);
+  }
+
+  .cover--trio .cover__phone--side:last-child {
+    margin-left: calc(var(--pw) * -0.18);
+  }
+
+  .cover__phone--side {
+    width: calc(var(--pw) * 0.85);
+  }
+  /* ----- Fill mode (home page cards) ----- */
+  /* The cover fills the card whatever its shape. The clip or phones sit in
+     the space above the title, sized to the smaller of the card's width and
+     height so they're never squished or cut off. A soft dark fade at the
+     bottom keeps the white title readable on the light backgrounds. */
+  .cover--fill {
+    position: absolute;
+    inset: 0;
+    container-type: size;
+    padding: 20px 20px 126px;
+  }
+
+  /* the home card already zooms its whole media layer on hover */
+  .card:hover .cover--fill {
+    transform: none;
+  }
+
+  .cover--fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* a lighter, warm brown-black fade so the cards sit with the warm
+       top row */
+    background: linear-gradient(to top, rgba(38, 26, 18, 0.88), rgba(38, 26, 18, 0.72) 24%, rgba(38, 26, 18, 0.3) 40%, transparent 58%);
+    pointer-events: none;
+  }
+
+  .cover--fill .cover__clip {
+    width: calc(min(84cqw, 92cqh * var(--r)) * var(--z, 1));
+    max-width: none;
+    border-radius: 8px;
+  }
+
+  /* Cropped clip: bigger than the tile and pinned by its top-left corner,
+     so it runs off the edges and under the title */
+  .cover--crop {
+    display: block;
+    overflow: hidden;
+  }
+
+  .cover--fill.cover--crop .cover__clip {
+    position: absolute;
+    left: calc(var(--cx) * 1cqw + var(--nx, 0px));
+    top: calc(var(--cy) * 1cqw);
+    width: calc(var(--cw) * 1cqw);
+    max-width: none;
+  }
+
+  /* the middle phone sits in the space above the title, and the group of
+     three fits the card's width with room to spare */
+  .cover--fill.cover--phones {
+    --pw: min(36.3cqw, 90cqh * 397 / 837);
+  }
+
+  .cover--fill .cover__phone {
+    flex-shrink: 0;
+  }
+
+  .cover-ph--fill {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+</style>

@@ -1,0 +1,409 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, projects } from '../data/site';
+import ProjectCover from '../components/ProjectCover.astro';
+
+/* A 12-column grid. The top row is the hero (9 columns) with the impact
+   card beside it (3 columns). The first three projects sit underneath as
+   equal cards across the full width (4 columns each). The other projects
+   still have case study pages. */
+const featured = projects.slice(0, 3);
+
+/* The home cards drop the "LG.com " at the start of a title, since most of
+   the work is for LG.com. The case study pages keep the full title. */
+const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
+---
+
+<Base>
+  <!-- Trying a serif for the bio on the home page only: Zodiak Thin,
+       free from Fontshare (same place as Switzer). -->
+  <Fragment slot="head">
+    <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
+  </Fragment>
+  <main class="bento" id="top">
+    <!-- Hero card: gradient, intro copy, contact links under it -->
+    <section class="cell hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__noise" aria-hidden="true"></div>
+      <h1 class="hero__title">{site.hero}</h1>
+      <div class="contact__links">
+        <a class="contact__email link" href={`mailto:${site.email}`} data-copy={site.email}>{site.email}</a>
+        <div class="contact__socials">
+          {site.socials.map((s) => <a class="label link" href={s.href}>{s.label} ↗</a>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact card: the big numbers -->
+    <section class="cell contact" aria-label="Product impact">
+      <section class="impact" aria-labelledby="impact-heading">
+        <h2 class="label impact__heading" id="impact-heading">{site.impact.heading}</h2>
+        <dl class="impact__list">
+          {site.impact.items.map((item) => (
+            <div class="impact__item">
+              <dt class="impact__label">{item.label}</dt>
+              <dd class="impact__value">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    </section>
+
+    <!-- Project cards: each opens its case study -->
+    {
+      featured.map((p, i) => (
+        <a
+          class="cell card"
+          id={i === 0 ? 'work' : undefined}
+          href={`/work/${p.slug}`}
+          style={`--hue:${p.hue}`}
+        >
+          <div class="card__media" aria-hidden="true">
+            <ProjectCover project={p} fill />
+          </div>
+          <div class="card__info">
+            <h2 class="card__title">
+              {p.cardTitle ?? shortTitle(p.title)}
+            </h2>
+            {/* "View case study" on the left, the year tag pushed to the right */}
+            <div class="card__meta">
+              <span class="label card__cta">View case study <span class="card__arrow">→</span></span>
+              <div class="tags">
+                <span class="tag card__tag">{p.year}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </main>
+</Base>
+
+<style>
+  /* ----- Bento grid ----- */
+  /* Desktop: the whole grid is exactly one screen tall. The top row and
+     the card row split the height evenly. On very short windows it
+     stops shrinking at 560px and scrolls instead of squashing. */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 1fr 1fr;
+    /* backfills gaps when a wide card can't fit at the end of a row */
+    grid-auto-flow: dense;
+    gap: 12px;
+    height: 100svh;
+    min-height: 560px;
+    padding: var(--gutter);
+  }
+
+  .cell {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* subtle outline on every box, drawn on top of its contents so it shows
+     over images and the gradient too, without changing any sizes */
+  .cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(34, 34, 34, 0.1);
+    pointer-events: none;
+  }
+
+  /* ----- Hero card (top-left, three columns) ----- */
+  .hero {
+    grid-column: span 9;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: clamp(20px, 4vh, 40px);
+    /* 120px either side of the copy; top and bottom shrink on shorter screens */
+    padding: clamp(24px, 6vh, 120px) 120px;
+    background: #fff6f4;
+  }
+
+  /* Hero gradient: the flowing layout of the original purple version,
+     recoloured into the red spectrum. The variety comes from light-to-deep
+     range as much as colour: a near-white top-right, deep crimson
+     bottom-left, hot pink on the left, a vivid coral streak through the
+     middle, a touch of orange along the bottom, rose and peach on the right.
+     Stacked colour pools, then blurred together. Top layer is listed first. */
+  .hero__glow {
+    position: absolute;
+    inset: -8%;
+    background:
+      /* a soft pale wash behind the bio and contact links, so the dark text
+         reads clearly; the colour stays strong around the edges */
+      radial-gradient(62% 72% at 32% 52%, rgba(255, 246, 244, 0.72) 0%, rgba(255, 246, 244, 0.4) 50%, transparent 78%),
+      radial-gradient(55% 45% at 85% 12%, #fff6f4 0%, transparent 70%),
+      radial-gradient(38% 32% at 0% 80%, #d6001c 0%, transparent 72%),
+      radial-gradient(34% 22% at 2% 52%, #ff3a8a 0%, transparent 72%),
+      radial-gradient(44% 38% at 68% 86%, rgba(232, 16, 40, 0.5) 0%, transparent 80%),
+      radial-gradient(30% 26% at 100% 100%, #ffc4a2 0%, transparent 72%),
+      radial-gradient(24% 34% at 100% 66%, #ff9cb2 0%, transparent 72%),
+      radial-gradient(26% 38% at 52% 55%, #ff4c3c 0%, transparent 72%),
+      radial-gradient(24% 20% at 40% 100%, #ff6a1c 0%, transparent 75%),
+      radial-gradient(30% 30% at 30% 92%, #ff8574 0%, transparent 72%),
+      linear-gradient(118deg, transparent 30%, rgba(255, 60, 50, 0.6) 44%, transparent 58%),
+      radial-gradient(70% 55% at 28% 48%, #ff8cac 0%, transparent 72%),
+      linear-gradient(180deg, #fff6f4 0%, #ffe8e4 32%, #ffa092 100%);
+    /* saturate: raise for richer color, 1 is the colors as written */
+    filter: blur(28px) saturate(1.7);
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    to {
+      transform: translate(-2%, -2%) scale(1.04);
+    }
+  }
+
+  /* Film-grain noise over the gradient. A tiny generated noise texture,
+     tiled and blended in. Raise opacity for more grain, lower for less. */
+  .hero__noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+  }
+
+  .hero__title {
+    position: relative;
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100; /* Zodiak Thin, its lightest weight */
+    /* scales with both screen width and height so it always fits the card */
+    font-size: clamp(22px, min(3.2vw, 4.6vh), 52px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #000;
+    text-align: left;
+    max-width: 1000px;
+    text-wrap: pretty;
+  }
+
+  /* ----- Impact card (top right, beside the hero) ----- */
+  .contact {
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 24px; /* same as the project cards' text */
+    background: #fff;
+    color: #000;
+  }
+
+  .contact__links {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  /* LinkedIn and Dribbble side by side, under the email */
+  .contact__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 32px;
+  }
+
+  .contact__email {
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: 300; /* Switzer Light */
+    margin-bottom: 8px;
+    white-space: nowrap;
+    color: #000;
+  }
+
+  .contact__socials .link {
+    color: #000;
+  }
+
+  /* ----- Impact numbers ----- */
+  .impact__heading {
+    margin: 0 0 6px;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .impact__list {
+    margin: 0;
+  }
+
+  /* one number per row with a thin line above it; number on top, label
+     underneath (the label comes first in the markup so screen readers read
+     "label: number") */
+  .impact__item {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    padding: clamp(10px, 1.6vh, 16px) 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* same serif as the bio (Zodiak Thin) */
+  .impact__value {
+    margin: 0;
+    font-family: 'Zodiak', Georgia, serif;
+    font-size: clamp(30px, min(3vw, 5vh), 52px);
+    line-height: 1;
+    font-weight: 100;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .impact__label {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 300;
+    color: rgba(34, 34, 34, 0.82); /* darker than the usual soft grey */
+  }
+
+  /* ----- Project cards ----- */
+  /* three equal cards across the full width */
+  .card {
+    grid-column: span 4;
+    min-height: 0;
+    display: flex;
+    align-items: flex-end;
+    color: #fff;
+  }
+
+  .card__media {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .card:hover .card__media {
+    transform: scale(1.04);
+  }
+
+  .card__info {
+    position: relative;
+    width: 100%;
+    padding: 24px;
+  }
+
+  /* always two lines tall, so every title starts at the same height
+     whether it wraps or not */
+  .card__title {
+    font-size: 20px;
+    line-height: 26px;
+    min-height: 52px;
+    font-weight: 300;
+  }
+
+  .card__tag {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  /* "View case study" on the left, year tag on the right */
+  .card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .card__meta .tags {
+    margin-top: 0;
+  }
+
+  /* same size as the year tag */
+  .card__cta {
+    white-space: nowrap;
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 1.2px;
+  }
+
+  /* the arrow nudges right when the card is hovered */
+  .card__arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover .card__arrow {
+    transform: translateX(4px);
+  }
+
+  /* ----- Tablet: intro and contact full width, three cards below ----- */
+  /* Stacked rows can't share one screen, so below desktop the grid goes
+     back to its natural height and scrolls. */
+  @media (max-width: 1100px) {
+    .bento {
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: none;
+      height: auto;
+      min-height: 0;
+    }
+
+    .hero {
+      grid-column: span 6;
+      padding: 80px 60px;
+    }
+
+    .hero__title {
+      font-size: clamp(26px, 4vw, 44px);
+    }
+
+    /* still three equal cards in a row */
+    .card {
+      grid-column: span 2;
+      min-height: 280px;
+    }
+
+    .contact {
+      grid-column: span 6;
+      grid-row: auto;
+    }
+
+    .impact__list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 30px;
+    }
+  }
+
+  /* ----- Phone: one column ----- */
+  @media (max-width: 640px) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+
+    .hero,
+    .contact,
+    .card {
+      grid-column: span 1;
+    }
+
+    .hero {
+      padding: 64px 24px;
+    }
+
+    .contact {
+      padding: 24px;
+    }
+
+    .contact__email {
+      font-size: min(20px, 4.6vw);
+    }
+
+    .card {
+      min-height: 300px;
+    }
+  }
+</style>

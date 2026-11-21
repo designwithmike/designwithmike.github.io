@@ -1,0 +1,293 @@
+:root {
+  --bg: #fbfbf3; /* warm off-white */
+  --ink: #222222;
+  --ink-soft: rgba(34, 34, 34, 0.6);
+  --rule: rgba(34, 34, 34, 0.2);
+  --hero: #cbc6c3;
+  --dark: #212121;
+  --light: #f3f3f3;
+  --rule-dark: rgba(243, 243, 243, 0.2);
+
+  /* Switzer runs the whole site, small uppercase labels included. The "display"
+     role (big statements, project titles) uses its Light weight; everything
+     else uses Regular. */
+  --serif: 'Switzer', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --sans: 'Switzer', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+
+  --gutter: 30px;
+  /* widest the case study content, nav and footer ever get */
+  --content-max: 1080px;
+  --side: 27.2%;
+  --radius: 6px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 26px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+/* ---------- Type ---------- */
+
+.h1 {
+  font-family: var(--sans);
+  font-size: clamp(34px, 3.4vw, 48px);
+  line-height: 1.16;
+  letter-spacing: -1px;
+  font-weight: 400;
+}
+
+.h1-serif {
+  font-family: var(--serif);
+  font-size: clamp(34px, 3.4vw, 48px);
+  line-height: 1.125;
+  letter-spacing: -1px;
+  font-weight: 300;
+}
+
+.h2 {
+  font-family: var(--sans);
+  font-size: clamp(28px, 2.5vw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  font-weight: 400;
+}
+
+.h2-serif {
+  font-family: var(--serif);
+  font-size: clamp(26px, 2.5vw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  font-weight: 300;
+}
+
+.label {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.body {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 300; /* Switzer Light */
+  max-width: 600px;
+}
+
+.body + .body {
+  margin-top: 8px;
+}
+
+.soft {
+  color: var(--ink-soft);
+}
+
+.link {
+  position: relative;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Page frame ---------- */
+
+.wrap {
+  padding-inline: var(--gutter);
+}
+
+/* The repeating two-column row: narrow label column on the left,
+   wide content column on the right with a hairline between them. */
+.row {
+  display: flex;
+  border-top: 1px solid var(--rule);
+}
+
+.row__side {
+  flex: 0 0 var(--side);
+  padding: 30px 30px 30px 0;
+}
+
+.row__main {
+  flex: 1;
+  min-width: 0;
+  padding: 30px 0 30px 30px;
+}
+
+.row--divided .row__main {
+  border-left: 1px solid var(--rule);
+}
+
+/* A heading that lines up with the content column, sitting above a row */
+.offset-title {
+  padding-left: calc(var(--side) + 30px);
+  padding-bottom: 40px;
+}
+
+/* ---------- Placeholder media ---------- */
+
+.ph {
+  --hue: 220;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 15% 100%, hsl(calc(var(--hue) + 40) 70% 62% / 0.9), transparent 60%),
+    linear-gradient(160deg, hsl(var(--hue) 35% 22%), hsl(var(--hue) 45% 12%));
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ph > span {
+  padding: 16px 18px;
+}
+
+.ph--light {
+  background: #dcdad6;
+  color: var(--ink-soft);
+}
+
+/* ---------- Tags ---------- */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 1px 7px;
+  border-radius: 3px;
+  background: rgba(34, 34, 34, 0.08);
+}
+
+/* ---------- Work cards ---------- */
+
+.card {
+  display: block;
+}
+
+.card .ph {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.card__media {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card:hover .ph {
+  transform: scale(1.03);
+}
+
+.card__title {
+  font-family: var(--serif);
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 300;
+  margin-top: 14px;
+}
+
+.card__title sup {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  margin-left: 4px;
+  vertical-align: top;
+  position: relative;
+  top: -2px;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 800px) {
+  :root {
+    --gutter: 16px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .row__side {
+    flex: none;
+    padding: 20px 0 0;
+  }
+
+  .row__main {
+    padding: 16px 0 30px;
+  }
+
+  .row--divided .row__main {
+    border-left: 0;
+  }
+
+  .offset-title {
+    padding-left: 0;
+    padding-bottom: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · Portfolio`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link href="https://api.fontshare.com/v2/css?f[]=switzer@200,300,400,500&display=swap" rel="stylesheet" />
+    <!-- a page can add its own fonts or tags here -->
+    <slot name="head" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <slot />
+
+    <!-- Toast: a small message at the top of the screen. Any link with
+         data-copy="some text" copies that text when clicked and shows it. -->
+    <div class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
+
+<script>
+  const toast = document.querySelector<HTMLElement>('.toast');
+  let hideTimer: number | undefined;
+
+  function showToast(message: string) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('toast--show');
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => toast.classList.remove('toast--show'), 2200);
+  }
+
+  document.addEventListener('click', async (e) => {
+    const link = (e.target as Element).closest<HTMLAnchorElement>('a[data-copy]');
+    if (!link) return;
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(link.dataset.copy ?? '');
+      showToast('Email copied');
+    } catch {
+      // Copying isn't allowed here (old browser, or not a secure page),
+      // so fall back to opening a new email instead
+      window.location.href = link.href;
+    }
+  });
+</script>
+
+<style is:global>
+  .toast {
+    position: fixed;
+    left: 50%;
+    top: 28px;
+    z-index: 100;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--dark);
+    color: var(--light);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translate(-50%, -8px); /* slides down into place */
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .toast--show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  dark?: boolean;
+}
+
+const { dark = false } = Astro.props;
+---
+
+<footer class:list={['footer wrap', { 'footer--dark': dark }]}>
+  <div class="footer__inner">
+    <div class="footer__links">
+      {site.socials.map((s) => <a class="label link" href={s.href}>{s.label}</a>)}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer--dark {
+    background: var(--dark);
+    color: var(--light);
+  }
+
+  /* Content lines up with the 1080px column; a dark background still
+     runs edge to edge. */
+  .footer__inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+    justify-content: flex-end; /* links stay on the right */
+    padding: 30px 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .footer--dark .footer__inner {
+    border-top-color: var(--rule-dark);
+  }
+
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+  }
+</style>

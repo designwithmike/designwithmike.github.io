@@ -1,0 +1,1341 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import Icon from '../../components/Icon.astro';
+import { site, projects } from '../../data/site';
+import type { Project } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+
+/* "More projects" shows two other projects. Finished case studies (ones with
+   a real hero to use as the cover) come first, then the rest in list order,
+   starting after this one and wrapping around at the end. */
+const index = projects.findIndex((p) => p.slug === project.slug);
+const hasCover = (p: Project) => {
+  const hero = p.sections[0];
+  return (hero?.type === 'image' || hero?.type === 'phones') && !!hero.frame;
+};
+const others = projects
+  .map((_, step) => projects[(index + 1 + step) % projects.length])
+  .filter((p) => p.slug !== project.slug);
+const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))].slice(0, 2);
+---
+
+<Base title={project.title}>
+  <!-- the serif used on the home page (Zodiak Thin), for the headline -->
+  <Fragment slot="head">
+    <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
+  </Fragment>
+  <main class="case wrap" style={`--hue:${project.hue}`}>
+    <!-- Back to the home page -->
+    <div class="back">
+      <a class="label link" href="/">← Back</a>
+    </div>
+
+    <!-- Summary: label on the left, big statement and fact rows on the right -->
+    <section class="row summary">
+      <div class="row__side"><span class="label">Summary</span></div>
+      <div class="row__main">
+        <h1 class="h2-serif summary__text">{project.summary}</h1>
+        <dl class="facts">
+          {
+            project.details.map((d) => (
+              <div class="facts__row label">
+                <dt>{d.label}</dt>
+                <dd>{d.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <!-- The story: text chapters with images between them -->
+    {
+      project.sections.map((s) => {
+        if (s.type === 'image' && s.frame && (s.video || s.image)) {
+          const mediaStyle = `aspect-ratio:${s.mediaRatio ?? '16 / 10'}${s.mediaWidth ? `;width:${s.mediaWidth}` : ''}`;
+          return (
+            <section class="media">
+              <div class="framed" style={`aspect-ratio:${s.ratio ?? '3 / 2'};background-image:url(${s.frame})`}>
+                {s.video ? (
+                  <video
+                    class="framed__media"
+                    src={s.video}
+                    style={mediaStyle}
+                    aria-label={s.label}
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                  />
+                ) : (
+                  <img class="framed__media" src={s.image} alt={s.label} loading="lazy" style={mediaStyle} />
+                )}
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'image') {
+          return (
+            <section class="media">
+              {s.video ? (
+                <video
+                  class="media__video"
+                  src={s.video}
+                  style={`aspect-ratio:${s.ratio ?? '16 / 9'}`}
+                  aria-label={s.label}
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                />
+              ) : s.image ? (
+                <img
+                  class="media__img"
+                  src={s.image}
+                  alt={s.label}
+                  loading="lazy"
+                  style={`aspect-ratio:${s.ratio ?? '16 / 9'}`}
+                />
+              ) : (
+                <div class="ph" style={`aspect-ratio:${s.ratio ?? '16 / 9'}`}>
+                  <span class="label">{s.label}</span>
+                </div>
+              )}
+            </section>
+          );
+        }
+        if (s.type === 'phones') {
+          return (
+            <section class="media">
+              <div
+                class:list={['phones', { 'phones--framed': s.frame, 'phones--labelled': s.phones.some((p) => p.label) }]}
+                style={`--n:${s.phones.length};--w:${s.phones.length >= 4 ? 15.5 : 17.5}%;background-image:url(${s.background})`}
+              >
+                {s.phones.map((p) =>
+                  s.frame ? (
+                    // a bare screen (or screen recording) placed inside the empty phone frame,
+                    // with an optional label (like Before / After) above it
+                    <div class="phones__item">
+                    {p.label && <span class="label chip chip--light pc__label">{p.label}</span>}
+                    <div class="pc__phone">
+                      <div class="pc__screen">
+                        {p.src.endsWith('.mp4') ? (
+                          <video
+                            class="pc__shot"
+                            src={p.src}
+                            aria-label={p.alt}
+                            autoplay
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                          />
+                        ) : (
+                          <img class="pc__shot" src={p.src} alt={p.alt} loading="lazy" />
+                        )}
+                      </div>
+                      <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                    </div>
+                    </div>
+                  ) : (
+                    <img class="phones__img" src={p.src} alt={p.alt} loading="lazy" width="397" height="810" />
+                  ),
+                )}
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'phone-compare') {
+          return (
+            <section class="media">
+              <div class="pc" style={`background-image:url(${s.background})`}>
+                <div class="pc__group pc__group--before">
+                  <span class="label chip chip--light pc__label">Before</span>
+                  <div class="pc__device">
+                    <div class="pc__phone">
+                      <div class="pc__screen">
+                        <img class="pc__shot pc__shot--scroll" src={s.before.src} alt={s.before.alt} loading="lazy" />
+                      </div>
+                      <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                    </div>
+                  </div>
+                </div>
+                <div class="pc__group pc__group--after">
+                  <span class="label chip chip--light pc__label">After</span>
+                  <div class="pc__device">
+                    <div class="pc__phone">
+                      <div class="pc__screen">
+                        <img class="pc__shot" src={s.after[0].src} alt={s.after[0].alt} loading="lazy" />
+                        <img class="pc__shot pc__shot--next" src={s.after[1].src} alt={s.after[1].alt} loading="lazy" />
+                      </div>
+                      <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                    </div>
+                    <span class="pc__dots">
+                      <button class="pc__step" type="button" data-step="0" aria-label="Show the first screen">
+                        <span class="pc__dot pc__dot--1" />
+                      </button>
+                      <button class="pc__step" type="button" data-step="1" aria-label="Show the second screen">
+                        <span class="pc__dot pc__dot--2" />
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'phone-slider') {
+          return (
+            <section class="media">
+              {/* Phones in a row with one before/after wipe across all of them.
+                  Each screen trims its own before and after at the handle. */}
+              <div
+                class="phones phones--framed compare ps"
+                style={`--n:${s.phones.length};--w:${s.phones.length >= 4 ? 15.5 : 17.5}%;background-image:url(${s.background})`}
+              >
+                {s.phones.map((p) => (
+                  <div class="pc__phone">
+                    <div class="pc__screen ps__screen">
+                      <img class="pc__shot ps__after" src={p.after} alt={`After: ${p.alt}`} loading="lazy" />
+                      <img class="pc__shot ps__before" src={p.before} alt={`Before: ${p.alt}`} loading="lazy" />
+                    </div>
+                    <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
+                  </div>
+                ))}
+                {/* Each chip sits in a full-size layer trimmed at the handle, so
+                    it disappears as the handle passes over it, like the images */}
+                <div class="compare__layer compare__before ps__chips" aria-hidden="true">
+                  <span class="label chip chip--light">Before</span>
+                </div>
+                <div class="compare__layer compare__after ps__chips" aria-hidden="true">
+                  <span class="label chip chip--light chip--right">After</span>
+                </div>
+                <div class="compare__handle" aria-hidden="true">
+                  <span class="compare__hint">Drag to see after</span>
+                  <span class="compare__knob">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 6l-5 6 5 6M15 6l5 6-5 6" />
+                    </svg>
+                  </span>
+                </div>
+                <input
+                  class="compare__range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="50"
+                  step="0.1"
+                  aria-label="Drag to compare before and after"
+                />
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'compare') {
+          const [beforeLabel, afterLabel] = s.labels ?? ['Before', 'After'];
+          return (
+            <section class="media">
+              <div class="compare" style={`aspect-ratio:${s.ratio ?? '3 / 2'}`}>
+                {/* Each side is a layer holding its image and its chip, trimmed at
+                    the handle, so a chip disappears along with its image */}
+                <div class="compare__layer compare__after">
+                  <img class="compare__img" src={s.after} alt={afterLabel} />
+                  <span class="label chip chip--light chip--right">{afterLabel}</span>
+                </div>
+                <div class="compare__layer compare__before">
+                  <img class="compare__img" src={s.before} alt={beforeLabel} />
+                  <span class="label chip chip--light">{beforeLabel}</span>
+                </div>
+                <div class="compare__handle" aria-hidden="true">
+                  <span class="compare__hint">Drag to see after</span>
+                  <span class="compare__knob">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 6l-5 6 5 6M15 6l5 6-5 6" />
+                    </svg>
+                  </span>
+                </div>
+                {/* An invisible slider over the whole image does the dragging,
+                    so it also works with the keyboard and screen readers */}
+                <input
+                  class="compare__range"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="50"
+                  step="0.1"
+                  aria-label={`Drag to compare ${beforeLabel.toLowerCase()} and ${afterLabel.toLowerCase()}`}
+                />
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'framed-pair') {
+          return (
+            <section class="media media--pair">
+              {s.items.map((it) => (
+                <div class="framed" style={`aspect-ratio:${s.ratio ?? '3 / 2'};background-image:url(${it.frame})`}>
+                  <img
+                    class="framed__media"
+                    src={it.image}
+                    alt={it.label}
+                    loading="lazy"
+                    style={`aspect-ratio:${it.mediaRatio}`}
+                  />
+                </div>
+              ))}
+            </section>
+          );
+        }
+        if (s.type === 'image-pair') {
+          return (
+            <section class="media media--pair">
+              {s.labels.map((label, i) => (
+                <figure class="pair__item">
+                  {s.images?.[i] ? (
+                    <img
+                      class="media__img"
+                      src={s.images[i]}
+                      alt={label}
+                      loading="lazy"
+                      style={`aspect-ratio:${s.ratio ?? '4 / 5'}`}
+                    />
+                  ) : (
+                    <div class="ph" style={`aspect-ratio:${s.ratio ?? '4 / 5'}`} />
+                  )}
+                  {/* the label sits on the image as a see-through chip */}
+                  <figcaption class="label chip">{label}</figcaption>
+                </figure>
+              ))}
+            </section>
+          );
+        }
+        if (s.type === 'stats') {
+          return (
+            <section class="chapter">
+              <div class="chapter__body">
+                <h3 class="label chapter__label">{s.heading}</h3>
+                {s.paragraphs?.map((p) => (
+                  <p class="body">{p}</p>
+                ))}
+                <div class="stats">
+                  {s.items.map((item) => (
+                    <div class="stat">
+                      <span class="stat__value">
+                        {item.value.split('→').map((part, i) => (
+                          <>
+                            {i > 0 && <span class="stat__arrow">→</span>}
+                            {part.trim()}
+                          </>
+                        ))}
+                      </span>
+                      <span class="stat__label">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (s.type === 'titled') {
+          return (
+            <section class="chapter">
+              <h2 class="h2 offset-title">{s.title}</h2>
+              <div class="chapter__body chapter__cols">
+                {s.columns.map((col) => (
+                  <div>
+                    <h3 class="label chapter__label">{col.heading}</h3>
+                    {col.paragraphs.map((p) => (
+                      <p class="body">{p}</p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </section>
+          );
+        }
+        return (
+          <section class:list={['chapter', { 'chapter--sub': s.sub }]}>
+            <div class="chapter__body">
+              <h3 class="label chapter__label">{s.heading}</h3>
+              {s.paragraphs.map((p) => (
+                <p class="body">{p}</p>
+              ))}
+              {s.stats && (
+                <div class="stats stats--inline">
+                  {s.stats.map((item) => (
+                    <div class="stat">
+                      <span class="stat__value">
+                        {item.value.split('→').map((part, i) => (
+                          <>
+                            {i > 0 && <span class="stat__arrow">→</span>}
+                            {part.trim()}
+                          </>
+                        ))}
+                      </span>
+                      <span class="stat__label">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {s.points && (
+                <ul class="points" style={`--n:${s.points.length}`}>
+                  {s.points.map((pt) => (
+                    <li class="point">
+                      <span class="point__icon">
+                        <Icon name={pt.icon} size={22} />
+                      </span>
+                      <h4 class="point__title">{pt.title}</h4>
+                      <p class="point__text">{pt.text}</p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {s.divider && <hr class="chapter__rule" />}
+            </div>
+          </section>
+        );
+      })
+    }
+
+    <!-- Link to the live design, after the story and before the callout -->
+    {
+      project.live && (
+        <section class="chapter">
+          <div class="chapter__body live">
+            <a class="link live__link" href={project.live.href} target="_blank" rel="noopener">
+              {project.live.label ?? 'See the live design on LG.com'} ↗
+            </a>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Closing callout: invite a full walkthrough -->
+    <section class="chapter">
+      <div class="chapter__body cta">
+        <p class="body">{site.caseStudyCta}</p>
+        <a class="link cta__email" href={`mailto:${site.email}`} data-copy={site.email}>{site.email}</a>
+      </div>
+    </section>
+
+    <!-- More projects -->
+    <section class="row more">
+      <div class="row__side">
+        <h2 class="more__heading">
+          <span class="h1">More</span><br />
+          <span class="h1-serif">Projects</span>
+        </h2>
+      </div>
+      <div class="row__main more__grid">
+        {more.map((p) => <WorkCard project={p} ratio="1 / 1" />)}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Base>
+
+<script>
+  /* Before/after slider: move the wipe line to wherever the slider is */
+  document.querySelectorAll<HTMLElement>('.compare').forEach((el) => {
+    const range = el.querySelector<HTMLInputElement>('.compare__range');
+    if (!range) return;
+    const screens = el.querySelectorAll<HTMLElement>('.ps__screen');
+    const update = () => {
+      el.style.setProperty('--pos', `${range.value}%`);
+      // Phone slider: tell each screen how far the handle is into it
+      if (!screens.length) return;
+      const box = el.getBoundingClientRect();
+      const x = box.left + (box.width * Number(range.value)) / 100;
+      screens.forEach((screen) => {
+        const r = screen.getBoundingClientRect();
+        screen.style.setProperty('--clip', `${Math.min(Math.max(x - r.left, 0), r.width)}px`);
+      });
+    };
+    /* Start on Before, with a thin strip of After showing at the right edge
+       as a hint. On a row of phones that strip sits inside the last phone. */
+    let touched = false;
+    const restPosition = () => {
+      const box = el.getBoundingClientRect();
+      const last = screens[screens.length - 1]?.getBoundingClientRect();
+      if (!last || !box.width) return 88;
+      return ((last.right - last.width * 0.14 - box.left) / box.width) * 100;
+    };
+    const setPos = (v: number) => {
+      range.value = String(v);
+      update();
+    };
+
+    /* The nudge: once the slider is mostly in view, the handle glides over to
+       show some of the After, then back. It plays once, stops the moment
+       someone grabs the slider, and is skipped for reduced motion. */
+    const nudge = () => {
+      const rest = restPosition();
+      const peek = 50;
+      const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+      const steps = [
+        { from: rest, to: peek, ms: 900 },
+        { from: peek, to: peek, ms: 300 },
+        { from: peek, to: rest, ms: 900 },
+      ];
+      let i = 0;
+      let start = performance.now();
+      const frame = (now: number) => {
+        if (touched) return;
+        const s = steps[i];
+        const t = Math.min((now - start) / s.ms, 1);
+        setPos(s.from + (s.to - s.from) * ease(t));
+        if (t < 1) return requestAnimationFrame(frame);
+        if (++i < steps.length) {
+          start = now;
+          requestAnimationFrame(frame);
+        }
+      };
+      requestAnimationFrame(frame);
+    };
+
+    const markTouched = () => {
+      touched = true;
+      el.classList.add('is-touched'); // fades the "Drag to see after" hint
+    };
+    range.addEventListener('pointerdown', markTouched);
+    range.addEventListener('keydown', markTouched);
+    range.addEventListener('input', () => {
+      markTouched();
+      update();
+    });
+    window.addEventListener('resize', () => (touched ? update() : setPos(restPosition())));
+    setPos(restPosition());
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const seen = new IntersectionObserver(
+        (entries) => {
+          if (!entries[0].isIntersecting) return;
+          seen.disconnect();
+          setTimeout(() => !touched && nudge(), 400);
+        },
+        { threshold: 0.6 },
+      );
+      seen.observe(el);
+    }
+  });
+
+  /* Mobile After phone: clicking a timer bar jumps to that screen. Each
+     screen is 3 seconds, so screen 2 starts 3 seconds into the loop. */
+  document.querySelectorAll<HTMLElement>('.pc__group--after').forEach((group) => {
+    group.querySelectorAll<HTMLButtonElement>('.pc__step').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const step = Number(btn.dataset.step);
+        const anims = group.getAnimations({ subtree: true });
+        anims.forEach((a) => (a.currentTime = step * 3000));
+        group.classList.toggle('is-step-2', anims.length === 0 && step === 1);
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Content is capped at 1080px wide and centred; the side gutters sit
+     outside that, so images are never wider than 1080px. */
+  .case {
+    max-width: calc(var(--content-max) + 2 * var(--gutter));
+    margin-inline: auto;
+  }
+
+  /* "← Back" sits in a 64px strip at the top, where the nav used to be */
+  .back {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    margin-bottom: 32px;
+  }
+
+  /* Placeholder images: a plain box a shade darker than the page background,
+     until real visuals are dropped in */
+  .case :global(.ph) {
+    background: #dde2e2;
+    color: var(--ink-soft);
+  }
+
+  /* ----- Summary ----- */
+  /* same serif as the home page bio */
+  .summary__text {
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100; /* Zodiak Thin */
+  }
+
+  .facts {
+    margin: 28px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts__row {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .facts__row dt {
+    flex: 0 0 50%;
+  }
+
+  .facts__row dd {
+    margin: 0;
+  }
+
+  /* ----- Chapters ----- */
+  .chapter {
+    padding-top: 80px;
+  }
+
+  .chapter .offset-title {
+    padding-bottom: 60px;
+  }
+
+  .chapter__body {
+    padding-left: calc(var(--side) + 30px);
+  }
+
+  .chapter__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  /* Section headings ("The problem", "Mobile"...): normal case, a step up
+     from the 18px body so they read as titles rather than small labels */
+  .chapter__label {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    margin-bottom: 12px;
+  }
+
+  /* Hairline under an overview, separating it from the steps below */
+  .chapter__rule {
+    margin: 48px 0 0;
+    border: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* A step inside a chapter (one change and what it did): smaller heading,
+     closer to the chapter above it */
+  .chapter--sub {
+    padding-top: 56px;
+  }
+
+  .chapter--sub .chapter__label {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  /* Numbers that sit right under a step's paragraph: a bit smaller than
+     the Results ones */
+  .stats--inline {
+    margin-top: 24px;
+  }
+
+  .stats--inline .stat__value {
+    font-size: clamp(26px, 3vw, 40px);
+  }
+
+  /* ----- Callouts: all in one row under a paragraph (two per row on
+     tablets, stacked on phones), icon then a short title and line ----- */
+  .points {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+    gap: 0 20px;
+    margin: 30px 0 0;
+    padding: 0;
+  }
+
+  .point {
+    padding: 0 0 24px;
+  }
+
+  .point__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 14px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink);
+  }
+
+  .point__title {
+    margin: 0 0 2px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+
+  .point__text {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 300;
+    color: var(--ink); /* same colour as the paragraphs above */
+  }
+
+  @media (max-width: 1100px) {
+    .points {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .points {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ----- Stats: big numbers stacked as rows inside the text column,
+     number on the left, label on the right, hairlines between ----- */
+  .stats {
+    margin-top: 30px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .stat {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: end;
+    gap: 30px;
+    padding: 18px 0 20px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .stat__value {
+    /* up to 52px on big screens */
+    font-size: clamp(28px, 3.5vw, 52px);
+    line-height: 1;
+    white-space: nowrap;
+    font-family: 'Zodiak', Georgia, serif; /* same serif as the headline */
+    font-weight: 100; /* Zodiak Thin */
+    letter-spacing: -0.03em;
+  }
+
+  /* the arrow in "13.5% → 33%" is smaller and lighter so the numbers lead */
+  .stat__arrow {
+    display: inline-block;
+    margin: 0 0.6em; /* space between the arrow and the numbers either side */
+    font-size: 0.55em;
+    vertical-align: 0.2em;
+    color: var(--ink-soft);
+    font-family: var(--sans); /* keeps the usual arrow shape */
+  }
+
+  .stat__label {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 300;
+    color: var(--ink);
+    padding-bottom: 3px; /* sits on the number's baseline */
+  }
+
+  @media (max-width: 640px) {
+    .stat {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+
+  /* ----- Live design link ----- */
+  .live__link {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  /* ----- Closing callout ----- */
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cta__email {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  /* ----- Images ----- */
+  .media {
+    padding-top: 80px;
+  }
+
+  /* Video in an image slot: same corners as the placeholder boxes, and the
+     same background colour shows while it loads */
+  .media__video {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* pin to the top, so any trimming comes off the bottom (where the
+       browser's link preview shows up in screen recordings) */
+    object-position: center top;
+    border-radius: var(--radius);
+    background: #dde2e2;
+  }
+
+  .media__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: #dde2e2;
+  }
+
+  .pair__item {
+    position: relative;
+    margin: 0;
+  }
+
+  /* Frosted, see-through chip in the top-left corner of each image */
+  .chip {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: #fff;
+  }
+
+  /* White frosted glass version (used on the slider) */
+  .chip--light {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(255, 255, 255, 0.7);
+    color: var(--ink);
+  }
+
+  .chip--right {
+    left: auto;
+    right: 16px;
+  }
+
+  /* ----- A clip or picture floating on a background, like the browser
+     windows in the slider images ----- */
+  .framed {
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #dde2e2 center / cover no-repeat;
+  }
+
+  .framed__media {
+    display: block;
+    width: 82%;
+    height: auto;
+    object-fit: cover;
+    object-position: center top; /* any trimming comes off the bottom */
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    background: transparent; /* a light colour here showed as a thin line around the edges */
+  }
+
+  @media (max-width: 640px) {
+    .framed__media {
+      width: 88%;
+      border-radius: 10px;
+    }
+  }
+
+  /* ----- Old vs new mobile menu, animated. Two phones, each with its
+     Before or After label above it.
+     Before: the old menu scrolls through the phone on an 8 second loop.
+     After: the categories list, then an instant switch to the second step,
+     like a tap, 3 seconds each. ----- */
+  .pc {
+    container-type: inline-size; /* lets the phones size off the box width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9%;
+    padding: 5% 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #dde2e2 center / cover no-repeat;
+  }
+
+  .pc__group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pc__label {
+    position: static; /* above the phone instead of in a corner */
+  }
+
+  .pc__device {
+    position: relative;
+    width: 18.5cqw;
+  }
+
+  /* The phone: an empty frame drawn over the screen. The screen box sits
+     where the frame's glass is, 397 x 810 being the frame image's size. */
+  .pc__phone {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    aspect-ratio: 397 / 810;
+    filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+  }
+
+  .pc__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .pc__screen {
+    position: absolute;
+    left: calc(11 / 397 * 100%);
+    top: calc(11 / 810 * 100%);
+    width: calc(374 / 397 * 100%);
+    height: calc(787 / 810 * 100%);
+    border-radius: 5.4% / 2.6%;
+    overflow: hidden;
+    background: #f6f3eb;
+  }
+
+  .pc__shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+  }
+
+  /* The long old menu, full length at the screen's width, sliding up by
+     the page's height minus one screen (57.4% of the image for this
+     405 x 2000 screenshot on a 374 x 787 screen). */
+  .pc__shot--scroll {
+    bottom: auto;
+    height: auto;
+    animation: pc-scroll 8s ease-in-out infinite;
+  }
+
+  /* 8 seconds: 0.5s at the top, 6s scrolling down, 1s at the bottom,
+     0.5s back up */
+  @keyframes pc-scroll {
+    0%, 6.25% { transform: translateY(0); }
+    81.25%, 93.75% { transform: translateY(-57.4%); }
+    100% { transform: translateY(0); }
+  }
+
+  /* After: the second step appears instantly over the first, like the real
+     menu after a tap, 3 seconds each */
+  .pc__shot--next {
+    opacity: 0;
+    animation: pc-switch 6s step-end infinite;
+  }
+
+  @keyframes pc-switch {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+
+  /* Two short timer bars under the After phone, one per screen, like
+     story progress bars. Each fills while its screen is showing. Clicking
+     a bar jumps to that screen and the loop carries on from there. They
+     hang below the phone so both phones stay level. */
+  .pc__dots {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+  }
+
+  /* the button is bigger than the thin bar so it's easy to hit */
+  .pc__step {
+    padding: 10px 2px;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .pc__step:focus-visible {
+    outline: 1px solid #fff;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .pc__step:hover .pc__dot {
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  /* with motion turned off, a click just swaps the screen */
+  .pc__group--after.is-step-2 .pc__shot--next {
+    opacity: 1;
+  }
+
+  .pc__dot {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .pc__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  .pc__dot--1::after {
+    animation: pc-fill-1 6s linear infinite;
+  }
+
+  .pc__dot--2::after {
+    animation: pc-fill-2 6s linear infinite;
+  }
+
+  @keyframes pc-fill-1 {
+    0% { transform: scaleX(0); }
+    50%, 100% { transform: scaleX(1); }
+  }
+
+  @keyframes pc-fill-2 {
+    0%, 50% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+
+  /* People who turn off motion get the first screen of each, standing
+     still, with no timer */
+  @media (prefers-reduced-motion: reduce) {
+    .pc__shot--scroll,
+    .pc__shot--next,
+    .pc__dot::after {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .pc {
+      padding: 28px 0 40px;
+      gap: 9%;
+    }
+
+    .pc__group {
+      gap: 8px;
+    }
+
+    .pc__device {
+      width: 34cqw;
+    }
+  }
+
+  /* ----- Phone screens on a background ----- */
+  .phones {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    align-items: center;
+    aspect-ratio: 16 / 9;
+    /* side room and gaps match the old combined image: phones ~17.5% wide */
+    padding: 0 8.2%;
+    column-gap: 4.2%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #dde2e2 center / cover no-repeat;
+  }
+
+  /* Framed phones keep the same phone width (17.5%) and gaps whatever the
+     count, so three phones sit centred instead of stretching wider */
+  /* Every phone row has the same rhythm: the gap is about half a phone's
+     width. Phones are 17.5% wide with a 9% gap, and a little narrower
+     (15.5%) in a row of four, where the gap shrinks to match (about 8%). */
+  .phones--framed {
+    --gap: calc(var(--w, 17.5%) * 0.514);
+    aspect-ratio: 21 / 10; /* shorter than 16 / 9, so less room above and below */
+    column-gap: var(--gap);
+    padding: 0 calc((100% - var(--n) * var(--w, 17.5%) - (var(--n) - 1) * var(--gap)) / 2);
+  }
+
+  /* The frame is drawn a touch taller (397 x 837 instead of 397 x 810) so its
+     screen matches the recordings and screenshots (about 0.46 wide to 1 tall).
+     Nothing inside gets stretched. */
+  .phones--framed .pc__phone {
+    aspect-ratio: 397 / 837;
+  }
+
+  /* Before / After pairs: the labels sit above the phones, so the box is
+     taller to keep room above and below */
+  .phones--labelled {
+    aspect-ratio: 16 / 9;
+  }
+
+  .phones__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Never stretched: a screen that is a bit taller than the phone loses a
+     sliver off the bottom instead */
+  .phones--framed .pc__shot {
+    object-fit: cover;
+    object-position: 50% 0%;
+  }
+
+  .phones__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* soft shadow that follows the phone's rounded shape */
+    filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Small screens: two by two, so each screen stays readable */
+  @media (max-width: 640px) {
+    .phones {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      aspect-ratio: auto;
+      padding: 28px 12%;
+      gap: 24px 9%;
+    }
+  }
+
+  /* ----- Before/after slider ----- */
+  .compare {
+    --pos: 50%;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #dde2e2;
+    user-select: none;
+  }
+
+  .compare__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .compare__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Before shows only to the left of the handle, After only to the right */
+  .compare__before {
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  .compare__after {
+    clip-path: inset(0 0 0 var(--pos));
+  }
+
+  .compare__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 1px;
+    margin-left: -0.5px;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+
+  .compare__knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    /* LG's primary red, solid, with a white ring so it stands out on any screen */
+    background: #a50034;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    transition: transform 0.2s ease;
+  }
+
+  /* Small hint above the button. It moves with the handle and fades out
+     for good once someone drags. */
+  .compare__hint {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 34px);
+    transform: translate(-50%, -100%);
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .compare.is-touched .compare__hint {
+    opacity: 0;
+  }
+
+  .compare:hover .compare__knob,
+  .compare__range:focus-visible ~ .compare__handle .compare__knob {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  /* The real slider: covers the whole image, invisible, with a hairline
+     thumb so the value lines up exactly with where you press */
+  .compare__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+
+  .compare__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1px;
+    height: 100%;
+  }
+
+  .compare__range::-moz-range-thumb {
+    width: 1px;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ----- Phone slider: one wipe across a row of phones ----- */
+  /* Left of the handle shows Before, right shows After, inside each phone */
+  .ps__before {
+    clip-path: inset(0 calc(100% - var(--clip, 50%)) 0 0);
+  }
+
+  .ps__after {
+    clip-path: inset(0 0 0 var(--clip, 50%));
+  }
+
+  /* the handle and the invisible slider sit above the phones */
+  .ps .compare__handle,
+  .ps .compare__range {
+    z-index: 2;
+  }
+
+  .ps__chips {
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    /* keep the phones in one row so a single wipe still runs across them */
+    .phones.ps {
+      grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+      aspect-ratio: auto;
+      padding: 56px 6% 32px;
+      gap: 0 9%; /* same gap as every other phone row */
+    }
+  }
+
+  .media--pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  /* ----- More projects ----- */
+  .more {
+    margin-top: 120px;
+  }
+
+  /* same serif as the headline (Zodiak Thin) */
+  .more__heading span {
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100;
+  }
+
+  .more__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding-bottom: 60px;
+  }
+
+  @media (max-width: 800px) {
+    .back {
+      margin-bottom: 16px;
+    }
+
+    .facts {
+      margin-top: 20px;
+    }
+
+    .chapter,
+    .media {
+      padding-top: 56px;
+    }
+
+    .chapter .offset-title {
+      padding-bottom: 28px;
+    }
+
+    .chapter__body {
+      padding-left: 0;
+    }
+
+    .chapter__cols,
+    .media--pair,
+    .more__grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .more {
+      margin-top: 80px;
+    }
+  }
+</style>

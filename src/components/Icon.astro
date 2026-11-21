@@ -1,0 +1,72 @@
+---
+/* Line icons from Lucide (lucide.dev, free to use). To add one, find its
+   name on lucide.dev, import it below the same way, and add it to `icons`. */
+import mousePointer from 'lucide-static/icons/mouse-pointer-2.svg?raw';
+import layoutGrid from 'lucide-static/icons/layout-grid.svg?raw';
+import sliders from 'lucide-static/icons/sliders-horizontal.svg?raw';
+import megaphone from 'lucide-static/icons/megaphone.svg?raw';
+import panelsTopLeft from 'lucide-static/icons/panels-top-left.svg?raw';
+import chevronsRight from 'lucide-static/icons/chevrons-right.svg?raw';
+import search from 'lucide-static/icons/search.svg?raw';
+import circleUser from 'lucide-static/icons/circle-user-round.svg?raw';
+import store from 'lucide-static/icons/store.svg?raw';
+import shoppingCart from 'lucide-static/icons/shopping-cart.svg?raw';
+import list from 'lucide-static/icons/list.svg?raw';
+import copy from 'lucide-static/icons/copy.svg?raw';
+import arrowDownToLine from 'lucide-static/icons/arrow-down-to-line.svg?raw';
+import target from 'lucide-static/icons/target.svg?raw';
+import pointerClick from 'lucide-static/icons/mouse-pointer-click.svg?raw';
+import scanEye from 'lucide-static/icons/scan-eye.svg?raw';
+import fileText from 'lucide-static/icons/file-text.svg?raw';
+import layoutList from 'lucide-static/icons/layout-list.svg?raw';
+import columns2 from 'lucide-static/icons/columns-2.svg?raw';
+import arrowLeftRight from 'lucide-static/icons/arrow-left-right.svg?raw';
+import images from 'lucide-static/icons/images.svg?raw';
+import messageQuestion from 'lucide-static/icons/message-circle-question.svg?raw';
+import panelTop from 'lucide-static/icons/panel-top.svg?raw';
+import tag from 'lucide-static/icons/tag.svg?raw';
+
+export const icons = {
+  cart: shoppingCart,
+  links: list,
+  duplicate: copy,
+  fold: arrowDownToLine,
+  target,
+  hover: mousePointer,
+  grid: layoutGrid,
+  filter: sliders,
+  megaphone,
+  framework: panelsTopLeft,
+  progressive: chevronsRight,
+  search,
+  user: circleUser,
+  store,
+  tap: pointerClick,
+  scan: scanEye,
+  specs: fileText,
+  cards: layoutList,
+  compare: columns2,
+  swipe: arrowLeftRight,
+  gallery: images,
+  question: messageQuestion,
+  sticky: panelTop,
+  name: tag,
+};
+export type IconName = keyof typeof icons;
+
+interface Props {
+  name: IconName;
+  size?: number;
+}
+
+const { name, size = 24 } = Astro.props;
+
+/* Thinner strokes than Lucide's default, to sit with the light type */
+const svg = icons[name]
+  .replace(/<!--[\s\S]*?-->/, '')
+  .replace(/stroke-width="[\d.]+"/, 'stroke-width="1.25"')
+  .replace(/width="24"/, `width="${size}"`)
+  .replace(/height="24"/, `height="${size}" aria-hidden="true"`);
+---
+
+<Fragment set:html={svg} />
