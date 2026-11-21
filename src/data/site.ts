@@ -49,7 +49,7 @@ export const site = {
     'I lead product design for LG.com, using data and AI to make it easier for people to find and buy the right product.',
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
-  caseStudyCta: 'For a walkthrough of the end-to-end process, just reach out.',
+  caseStudyCta: 'For a walkthrough of the end-to-end process, reach out.',
   workYears: '(20XX–20XX)',
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mikemendez11' },
