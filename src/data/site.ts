@@ -7,8 +7,8 @@
 
 /* Icon names for callouts: cart, links, duplicate, fold, target, hover,
    grid, filter, megaphone, framework, progressive, search, user, store,
-   tap, scan, specs, cards, compare, swipe, gallery, question, sticky, name
-   (set up in Icon.astro) */
+   tap, scan, specs, cards, compare, swipe, gallery, question, sticky, name,
+   pick, picture, gaming, audio, design, shared (set up in Icon.astro) */
 type IconName =
   | 'cart'
   | 'links'
@@ -33,7 +33,13 @@ type IconName =
   | 'gallery'
   | 'question'
   | 'sticky'
-  | 'name';
+  | 'name'
+  | 'pick'
+  | 'picture'
+  | 'gaming'
+  | 'audio'
+  | 'design'
+  | 'shared';
 
 export const site = {
   name: 'Michael Mendez',
@@ -70,6 +76,8 @@ export type Section =
       heading: string;
       paragraphs: string[];
       points?: { icon: IconName; title: string; text: string }[];
+      /* how many callouts sit in a row on desktop (all in one row if left out) */
+      pointColumns?: number;
       /* `sub` makes it a step inside the chapter above (smaller heading).
          `stats` puts big numbers right under the paragraph. */
       sub?: boolean;
@@ -123,7 +131,9 @@ export type Section =
       type: 'phone-slider';
       background: string;
       frame: string;
-      phones: { before: string; after: string; alt: string }[];
+      /* `afterAnchor: 'bottom'` keeps the bottom of the after screen when it
+         is a touch taller than the phone (trims the top instead) */
+      phones: { before: string; after: string; alt: string; afterAnchor?: 'bottom' }[];
     }
   /* Two pictures side by side, each floating on its own background (like
      `image` with a `frame`). `mediaRatio` is each picture's own shape. */
@@ -155,8 +165,9 @@ export type Project = {
   details: { label: string; value: string }[];
   /* link to the live design, shown at the bottom of the case study (above
      the closing callout) and opened in a new tab.
-     `label` defaults to "See the live design on LG.com". */
-  live?: { href: string; label?: string };
+     `label` defaults to "See the live design on LG.com". `note` is a short
+     aside in parentheses after the link. */
+  live?: { href: string; label?: string; note?: string };
   /* the title on the home page tile, which says what the work did.
      Falls back to the title without "LG.com". */
   cardTitle?: string;
@@ -337,6 +348,23 @@ const lgNavSections: Section[] = [
     paragraphs: [
       'On mobile, we kept the same framework as desktop but turned it into a progressive flow that goes one level at a time, rather than every link stacked on one long page.',
     ],
+    points: [
+      {
+        icon: 'progressive',
+        title: 'Progressive navigation',
+        text: 'Guides users and reduces page length',
+      },
+      {
+        icon: 'search',
+        title: 'Exposed search bar',
+        text: 'Search entered directly from the navigation',
+      },
+      {
+        icon: 'user',
+        title: 'Dedicated utility actions',
+        text: 'Sign in / Support',
+      },
+    ],
   },
   /* Old mobile menu (every link on one long page) next to the new one */
   {
@@ -404,14 +432,13 @@ const lgMobileSections: Section[] = [
     frame: '/work/lg-navigation/phone-frame.png',
     phones: [
       { before: '/work/lg-mobile/cards-before.webp', after: '/work/lg-mobile/cards-after.webp', alt: 'category page product cards' },
-      { before: '/work/lg-mobile/tray-before.webp', after: '/work/lg-mobile/tray-after.webp', alt: 'compare tray' },
+      { before: '/work/lg-mobile/tray-before.webp', after: '/work/lg-mobile/tray-after.webp', alt: 'compare tray', afterAnchor: 'bottom' },
       { before: '/work/lg-mobile/compare-before.webp', after: '/work/lg-mobile/compare-after.webp', alt: 'compare page' },
     ],
   },
   {
     type: 'text',
     heading: 'The category page',
-    divider: true,
     paragraphs: [
       'The category page is where shoppers explore the lineup, but on mobile one product fit on screen at a time, and fewer than a third of shoppers (32%) reached the bottom of the grid.',
     ],
@@ -462,14 +489,16 @@ const lgMobileSections: Section[] = [
   },
 
   /* ----- Product page: slider (top of page), overview, then services, breadcrumb and sticky nav, gallery and specs ----- */
-  /* Slider for the top of the product page. Additional services has its own
-     before and after further down, next to its number. */
+  /* Before and after for the top of the product page, side by side.
+     Additional services has its own before and after further down, next to
+     its number. */
   {
-    type: 'phone-slider',
+    type: 'phones',
     background: '/work/lg-mobile/phones-bg.webp',
     frame: '/work/lg-navigation/phone-frame.png',
     phones: [
-      { before: '/work/lg-mobile/pdp-before.webp', after: '/work/lg-mobile/pdp-after.webp', alt: 'top of the product page' },
+      { label: 'Before', src: '/work/lg-mobile/pdp-before.webp', alt: 'Old top of the product page' },
+      { label: 'After', src: '/work/lg-mobile/pdp-after.webp', alt: 'New top of the product page, product name and large image up front' },
     ],
   },
   {
@@ -481,7 +510,7 @@ const lgMobileSections: Section[] = [
       'I led with the product name rather than the SKU and put a large product image front and center, so shoppers can tell they\'re in the right place.',
     ],
   },
-  /* Additional services, before and after (also in the slider above) */
+  /* Additional services, before and after */
   {
     type: 'phones',
     background: '/work/lg-mobile/phones-bg.webp',
@@ -525,6 +554,10 @@ const lgMobileSections: Section[] = [
     heading: 'Breadcrumb and sticky nav',
     paragraphs: [
       'To save space and keep things clean, I shortened the breadcrumb trail and added a sticky nav, so people can jump between sections and find what they need with less effort.',
+    ],
+    stats: [
+      { value: '~6%', label: 'Of product page sessions engage with the sticky product nav' },
+      { value: '~6 in 10', label: 'Sticky nav clicks go to Specs, so shoppers get to product details quicker' },
     ],
   },
   /* Gallery thumbnails and the sticky nav to specs, in use */
@@ -598,8 +631,21 @@ const lgAiSections: Section[] = [
     heading: "What's in the summary",
     sub: true,
     paragraphs: [
-      'We added a "Quick Pick" to help shoppers find the TV that matched their watching style, whether that was gaming, cinematic or high-end design. Below that are the top four categories shoppers look for in a TV (picture quality, gaming performance, audio experience and design), each showing how the compared models stack up. A shared features section rounds it out, showing what all the compared products have in common.',
+      'The summary opens with a "Quick Pick", then breaks the comparison down into the categories shoppers look for most in a TV.',
       'Leadership bought in, and the feature is live at scale.',
+    ],
+    pointColumns: 3,
+    points: [
+      {
+        icon: 'pick',
+        title: 'Quick Pick',
+        text: 'Finds the TV that matches your watching style, whether gaming, cinematic or high-end design',
+      },
+      { icon: 'picture', title: 'Picture quality', text: 'Compared side by side' },
+      { icon: 'gaming', title: 'Gaming performance', text: 'Compared side by side' },
+      { icon: 'audio', title: 'Audio experience', text: 'Compared side by side' },
+      { icon: 'design', title: 'Design', text: 'Compared side by side' },
+      { icon: 'shared', title: 'Shared features', text: 'What all the compared products have in common' },
     ],
   },
 ];
@@ -609,7 +655,7 @@ export const projects: Project[] = [
     ...placeholderProject(1, 'LG.com Navigation', 232, ['Website', 'Mobile']),
     sections: lgNavSections,
     slug: 'lg-navigation',
-    live: { href: '#' }, // TODO: real LG.com URL
+    live: { href: 'https://www.lg.com/us/' }, // LG.com home page, where the navigation lives
     year: '2026',
     cardTitle: 'Making the site navigation easier to scan',
     homeClipStart: 1.2, // the Appliances menu is already open
@@ -625,11 +671,11 @@ export const projects: Project[] = [
     ...placeholderProject(2, 'LG.com Mobile Optimization', 265, ['Mobile', 'Website']),
     sections: lgMobileSections,
     slug: 'lg-mobile',
-    live: { href: '#' }, // TODO: real LG.com URL
+    live: { href: 'https://www.lg.com/us/tvs/lg-oled77g6wua-oled-4k-tv' }, // example product page
     year: '2025',
     cardTitle: 'Redesigning category and product pages for mobile',
     homeClipStart: 9.6, // the filter menu is already open
-    summary: "Redesigning LG.com's category and product pages for mobile shoppers.",
+    summary: "Rebuilding LG.com's category and product pages for mobile shoppers.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
@@ -640,7 +686,10 @@ export const projects: Project[] = [
     ...placeholderProject(3, 'LG.com AI Comparison', 28, ['AI', 'Website']),
     sections: lgAiSections,
     slug: 'lg-ai-compare',
-    live: { href: '#' }, // TODO: real LG.com URL
+    live: {
+      href: 'https://www.lg.com/us/oled-evo-tvs', // example product category page
+      note: 'compare a few items to trigger the feature',
+    },
     year: '2026',
     cardTitle: 'Using AI to simplify product comparisons',
     homeCrop: { width: 150, left: 8, top: -22 }, // zoomed in on the AI summary and Quick Pick

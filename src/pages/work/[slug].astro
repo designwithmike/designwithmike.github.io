@@ -209,7 +209,13 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                 {s.phones.map((p) => (
                   <div class="pc__phone">
                     <div class="pc__screen ps__screen">
-                      <img class="pc__shot ps__after" src={p.after} alt={`After: ${p.alt}`} loading="lazy" />
+                      <img
+                        class="pc__shot ps__after"
+                        style={p.afterAnchor === 'bottom' ? 'object-position:50% 100%' : undefined}
+                        src={p.after}
+                        alt={`After: ${p.alt}`}
+                        loading="lazy"
+                      />
                       <img class="pc__shot ps__before" src={p.before} alt={`Before: ${p.alt}`} loading="lazy" />
                     </div>
                     <img class="pc__frame" src={s.frame} alt="" loading="lazy" />
@@ -391,7 +397,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                 </div>
               )}
               {s.points && (
-                <ul class="points" style={`--n:${s.points.length}`}>
+                <ul class="points" style={`--n:${s.pointColumns ?? s.points.length}`}>
                   {s.points.map((pt) => (
                     <li class="point">
                       <span class="point__icon">
@@ -418,6 +424,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
             <a class="link live__link" href={project.live.href} target="_blank" rel="noopener">
               {project.live.label ?? 'See the live design on LG.com'} ↗
             </a>
+            {project.live.note && <span class="live__note"> ({project.live.note})</span>}
           </div>
         </section>
       )
@@ -759,6 +766,11 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
 
   /* ----- Live design link ----- */
   .live__link {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .live__note {
     font-size: 20px;
     line-height: 28px;
   }
