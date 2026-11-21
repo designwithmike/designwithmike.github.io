@@ -1,5 +1,5 @@
 ---
-import { site, buildsPage } from '../data/site';
+import { buildsPage } from '../data/site';
 
 interface Props {
   dark?: boolean;
@@ -14,7 +14,6 @@ const { dark = false, builds = true } = Astro.props;
   <div class="footer__inner">
     <div class="footer__links">
       {builds && <a class="label link" href="/builds">{buildsPage.linkLabel}</a>}
-      {site.socials.map((s) => <a class="label link" href={s.href}>{s.label}</a>)}
     </div>
   </div>
 </footer>

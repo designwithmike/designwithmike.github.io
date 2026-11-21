@@ -124,7 +124,7 @@ export const builds: Build[] = [
     image: '/builds/popstream-live-tv.jpg',
     alt: 'Popstream Live TV screen with a video preview of the current show in the top left and a channel guide beside it',
     problem: "IPTV players are confusing, and they're not native to webOS.",
-    fix: 'A native webOS IPTV player, simplified to feel like cable TV. No third-party devices needed.',
+    fix: 'A native webOS IPTV player, simplified to feel like cable TV. No third-party devices needed. I integrated Claude Haiku to look at my favorited shows and share recommendations, and I used Jev to verify live channels for picture quality, like HD and 4K, so I know before I tune in.',
   },
 ];
 
