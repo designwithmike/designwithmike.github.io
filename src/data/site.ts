@@ -93,7 +93,7 @@ export type Build = {
 
 export const buildsPage = {
   title: 'Personal AI builds',
-  intro: "How I've used AI to solve personal pain points in my life",
+  intro: "How I've used AI to solve my own pain points",
   /* the link on the home page and in the footer */
   linkLabel: 'Personal AI builds',
 };
