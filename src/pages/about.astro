@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import Footer from '../components/Footer.astro';
+import { aboutPage, buildsPage } from '../data/site';
+---
+
+<Base title={aboutPage.title}>
+  <!-- the serif used on the home page (Zodiak Thin), for the headline -->
+  <Fragment slot="head">
+    <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
+  </Fragment>
+  <main class="about wrap">
+    <!-- Back to the home page -->
+    <div class="back">
+      <a class="label link" href="/">← Back</a>
+    </div>
+
+    <img class="about__avatar" src="/avatar.png" alt="Illustrated portrait of Michael" width="512" height="512" />
+
+    <h1 class="about__headline">{aboutPage.headline}</h1>
+
+    <div class="about__text">
+      {aboutPage.paragraphs.map((p) => <p>{p}</p>)}
+      <!-- stays on this site, so a plain arrow instead of ↗ -->
+      <a class="label link" href="/builds">{buildsPage.linkLabel} →</a>
+    </div>
+  </main>
+  <!-- builds is already linked right above, so the footer skips both -->
+  <Footer about={false} builds={false} />
+</Base>
+
+<style>
+  .about {
+    max-width: calc(var(--content-max) + var(--gutter) * 2);
+    margin-inline: auto;
+  }
+
+  /* "← Back" sits in a 64px strip at the top, same as the case studies */
+  .back {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    margin-bottom: 32px;
+  }
+
+  .about__avatar {
+    display: block;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin-bottom: 32px;
+  }
+
+  /* same serif as the home page bio and the builds page */
+  .about__headline {
+    max-width: 18em;
+    font-family: 'Zodiak', Georgia, serif;
+    font-weight: 100; /* Zodiak Thin */
+    font-size: clamp(30px, 3.6vw, 48px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+
+  /* a readable column, same body size as the builds page */
+  .about__text {
+    max-width: 640px;
+    margin: 56px 0 96px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .about__text p {
+    margin: 0 0 20px;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 300;
+  }
+
+  .about__text .link {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 800px) {
+    .about__text {
+      margin-top: 40px;
+      padding-top: 32px;
+    }
+  }
+</style>

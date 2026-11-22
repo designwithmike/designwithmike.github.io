@@ -46,7 +46,7 @@ export const site = {
   /* The hero wraps on its own, so write it as one sentence or two.
      Around 120–200 characters fills it nicely. */
   hero:
-    'I lead product design for LG.com, using data and AI to make it easier for people to find and buy the right product.',
+    'As Lead Product Designer for LG.com, I own the end-to-end process, from research and data to coded prototypes that help shoppers find the right product.',
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
   caseStudyCta: 'For a walkthrough of the end-to-end process, reach out.',
@@ -61,7 +61,6 @@ export const site = {
     items: [
       { value: '+8%', label: 'Overall CVR lift from UX optimization' },
       { value: '+48%', label: 'Site navigation & usability satisfaction' },
-      { value: '+62%', label: 'Speed enhancement' },
     ],
   },
 };
@@ -96,6 +95,23 @@ export const buildsPage = {
   intro: "How I've used AI to solve my own pain points",
   /* the link on the home page and in the footer */
   linkLabel: 'Personal AI builds',
+};
+
+/* ----- About page (/about) -----
+   The headline is in the serif, then the paragraphs underneath. The last
+   paragraph ends with a link to the Personal AI builds page. */
+export const aboutPage = {
+  title: 'About',
+  /* the link on the home page and in the footer */
+  linkLabel: 'About',
+  headline: 'The question I always come back to is, does it solve the problem?',
+  paragraphs: [
+    "I'm the Lead Product Designer for LG.com. I lead a small team of two designers, and we work day to day with stakeholders, PMs, engineering and data analytics.",
+    "I started at LG's agency back in 2014 as an art director and moved into product design in 2018. Since then I've helped build LG's online store from the ground up into a nine-figure business.",
+    "I use Claude end to end. Early on, it helps me pull usability insights from FullStory, make sense of the analytics our data team shares and dig through user testing transcripts. So by the time I'm designing, every iteration is anchored to actual data points.",
+    "From there I build a coded prototype in Claude instead of wiring up Figma frames, so it's basically the front-end experience. Stakeholders get to use it in real time on any device they choose, which makes selling the work a lot easier, and that same prototype ends up being the design handoff.",
+    'Outside of work, I build small AI tools to fix my own pain points, like a family hub app for our LG StanbyME.',
+  ],
 };
 
 export const builds: Build[] = [
@@ -368,13 +384,13 @@ const lgNavSections: Section[] = [
     type: 'text',
     heading: 'The new navigation',
     paragraphs: [
-      'Using behavioral analytics and FullStory insights, we rethought the hierarchy and cut extra levels and redundant links, so the structure matches how people shop.',
+      'Using behavioral analytics and FullStory insights, we rethought the hierarchy and cut extra levels and redundant links, so the structure matches how people shop. Before the redesign, we spent about two months A/B testing new ideas, and what we learned shaped the new menu.',
     ],
     points: [
       {
         icon: 'hover',
         title: 'Opens on hover',
-        text: 'A simple hover on desktop',
+        text: 'A simple hover on desktop, with focus states for keyboard users',
       },
       {
         icon: 'grid',
@@ -548,6 +564,14 @@ const lgMobileSections: Section[] = [
       { value: '0.09% → 0.23%', label: 'Compare engagement, on a feature most shoppers skip' },
     ],
   },
+  {
+    type: 'text',
+    sub: true,
+    heading: 'Trade-offs',
+    paragraphs: [
+      'Fitting more products on screen meant giving some things up. Member pricing and rebate lines came off the cards, and the smaller compare tray shows less at a glance. The jump in card engagement and scroll depth showed it was worth it.',
+    ],
+  },
 
   /* ----- Product page: slider (top of page), overview, then services, breadcrumb and sticky nav, gallery and specs ----- */
   /* Before and after for the top of the product page, side by side.
@@ -661,7 +685,7 @@ const lgAiSections: Section[] = [
     type: 'text',
     heading: 'The problem',
     paragraphs: [
-      'Comparing products on LG.com was overwhelming. The spec data was a lot to get through, and shoppers had a hard time finding what they needed to make a decision. When we dug into the data, it turned out most shoppers were looking for the same types of information when comparing products.',
+      'Comparing products on LG.com was overwhelming. The spec data was a lot to get through, and shoppers had a hard time finding what they needed to make a decision. The data showed real friction in the compare experience, which is why we started exploring solutions. When we dug further into the data, it turned out most shoppers were looking for the same types of information when comparing products.',
     ],
   },
   /* The summary on mobile: scrolling down its rows, then swiping across
@@ -679,7 +703,7 @@ const lgAiSections: Section[] = [
     type: 'text',
     heading: 'The solution',
     paragraphs: [
-      "We weren't sure this would work, so we A/B tested it before committing, starting with the most compared products as a baseline. Working from the insights team's data, we figured out what should go into the AI-generated summary. AI did the heavy lifting from that point, translating spec-heavy information into clear, consumer-friendly comparisons. After a month of testing, the results were hard to ignore.",
+      "We weren't sure this would work, so before any engineering investment we simulated the AI summary in an A/B test, starting with the most compared products as a baseline. Working from the insights team's data, we figured out what should go into the AI-generated summary. AI did the heavy lifting from that point, translating spec-heavy information into clear, consumer-friendly comparisons. After a month of testing, the results were hard to ignore. They won leadership's buy-in for the full build, and the feature is now live at scale.",
     ],
     stats: [
       { value: '+11.56%', label: 'Add to cart, against the control' },
@@ -693,7 +717,6 @@ const lgAiSections: Section[] = [
     sub: true,
     paragraphs: [
       'The summary opens with a "Quick Pick", then breaks the comparison down into the categories shoppers look for most in a TV.',
-      'Leadership bought in, and the feature is live at scale.',
     ],
     pointColumns: 3,
     points: [
@@ -718,14 +741,15 @@ export const projects: Project[] = [
     slug: 'lg-navigation',
     live: { href: 'https://www.lg.com/us/' }, // LG.com home page, where the navigation lives
     year: '2026',
-    cardTitle: 'Making the site navigation easier to scan',
+    cardTitle: 'Shoppers were giving up on the menu and searching instead',
     homeClipStart: 1.2, // the Appliances menu is already open
     homeZoom: 1.15,
-    summary: 'Redesigning LG.com navigation based on customer behavior data.',
+    summary: "LG.com's menu had grown to 238 links, and shoppers were turning to search instead.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Team', value: '3 PMs, Engineering, Data analytics' },
       { label: 'Timeline', value: 'About 6 months' },
+      { label: 'Design system', value: 'MUI, with accessibility built in' },
     ],
   },
   {
@@ -734,13 +758,14 @@ export const projects: Project[] = [
     slug: 'lg-mobile',
     live: { href: 'https://www.lg.com/us/tvs/lg-oled77g6wua-oled-4k-tv' }, // example product page
     year: '2025',
-    cardTitle: 'Redesigning category and product pages for mobile',
+    cardTitle: 'Built for desktop, but most shoppers were on phones',
     homeClipStart: 9.6, // the filter menu is already open
-    summary: "Rebuilding LG.com's category and product pages for mobile shoppers.",
+    summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 6 months' },
+      { label: 'Design system', value: 'MUI, with accessibility built in' },
     ],
   },
   {
@@ -752,13 +777,14 @@ export const projects: Project[] = [
       note: 'compare a few items to trigger the feature',
     },
     year: '2026',
-    cardTitle: 'Using AI to simplify product comparisons',
+    cardTitle: "Spec sheets don't say which product is right for you",
     homeCrop: { width: 150, left: 8, top: -22 }, // zoomed in on the AI summary and Quick Pick
-    summary: 'Using AI to turn spec-heavy product comparisons on LG.com into clear, consumer-friendly summaries.',
+    summary: "Spec sheets don't tell shoppers which product is right for them, so we tested a plain-language answer before building it.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 3 months' },
+      { label: 'Design system', value: 'MUI, with accessibility built in' },
     ],
   },
   placeholderProject(4, 'Adipiscing Elit', 150, ['Website']),

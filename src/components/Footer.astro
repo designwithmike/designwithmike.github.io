@@ -1,18 +1,20 @@
 ---
-import { buildsPage } from '../data/site';
+import { buildsPage, aboutPage } from '../data/site';
 
 interface Props {
   dark?: boolean;
-  /* the Personal AI builds link; the builds page turns it off for itself */
+  /* the About and Personal AI builds links; each page turns its own off */
+  about?: boolean;
   builds?: boolean;
 }
 
-const { dark = false, builds = true } = Astro.props;
+const { dark = false, about = true, builds = true } = Astro.props;
 ---
 
 <footer class:list={['footer wrap', { 'footer--dark': dark }]}>
   <div class="footer__inner">
     <div class="footer__links">
+      {about && <a class="label link" href="/about">{aboutPage.linkLabel}</a>}
       {builds && <a class="label link" href="/builds">{buildsPage.linkLabel}</a>}
     </div>
   </div>

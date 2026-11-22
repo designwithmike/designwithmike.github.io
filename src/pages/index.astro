@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, projects, buildsPage } from '../data/site';
+import { site, projects, buildsPage, aboutPage } from '../data/site';
 import ProjectCover from '../components/ProjectCover.astro';
 
 /* A 12-column grid. The top row is the hero (9 columns) with the impact
@@ -29,8 +29,9 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
       <div class="contact__links">
         <a class="contact__email link" href={`mailto:${site.email}`} data-copy={site.email}>{site.email}</a>
         <div class="contact__socials">
+          <!-- About and builds stay on this site, so a plain arrow instead of ↗ -->
+          <a class="label link" href="/about">{aboutPage.linkLabel} →</a>
           {site.socials.map((s) => <a class="label link" href={s.href}>{s.label} ↗</a>)}
-          <!-- stays on this site, so a plain arrow instead of ↗ -->
           <a class="label link" href="/builds">{buildsPage.linkLabel} →</a>
         </div>
       </div>
@@ -375,7 +376,7 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
 
     .impact__list {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: 30px;
     }
   }
