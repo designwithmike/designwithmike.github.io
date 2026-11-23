@@ -46,7 +46,7 @@ export const site = {
   /* The hero wraps on its own, so write it as one sentence or two.
      Around 120–200 characters fills it nicely. */
   hero:
-    'As Lead Product Designer for LG.com, I own the end-to-end process, from research and data to coded prototypes that help shoppers find the right product.',
+    'As Lead Product Designer for LG.com, I own the end-to-end process, from research to coded prototypes, using shopper data to help people find the right product.',
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
   caseStudyCta: 'For a walkthrough of the end-to-end process, reach out.',
@@ -758,7 +758,7 @@ export const projects: Project[] = [
     slug: 'lg-mobile',
     live: { href: 'https://www.lg.com/us/tvs/lg-oled77g6wua-oled-4k-tv' }, // example product page
     year: '2025',
-    cardTitle: 'Built for desktop, but most shoppers were on phones',
+    cardTitle: 'Mobile shoppers were stuck with pages built for desktop',
     homeClipStart: 9.6, // the filter menu is already open
     summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
     details: [
@@ -777,7 +777,7 @@ export const projects: Project[] = [
       note: 'compare a few items to trigger the feature',
     },
     year: '2026',
-    cardTitle: "Spec sheets don't say which product is right for you",
+    cardTitle: "Shoppers couldn't make sense of spec-heavy comparisons",
     homeCrop: { width: 150, left: 8, top: -22 }, // zoomed in on the AI summary and Quick Pick
     summary: "Spec sheets don't tell shoppers which product is right for them, so we tested a plain-language answer before building it.",
     details: [
