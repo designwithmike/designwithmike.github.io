@@ -230,7 +230,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                   <span class="label chip chip--light chip--right">After</span>
                 </div>
                 <div class="compare__handle" aria-hidden="true">
-                  <span class="compare__hint">Drag to see after</span>
+                  <span class="compare__hint">Drag to compare</span>
                   <span class="compare__knob">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M9 6l-5 6 5 6M15 6l5 6-5 6" />
@@ -266,7 +266,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                   <span class="label chip chip--light">{beforeLabel}</span>
                 </div>
                 <div class="compare__handle" aria-hidden="true">
-                  <span class="compare__hint">Drag to see after</span>
+                  <span class="compare__hint">Drag to compare</span>
                   <span class="compare__knob">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M9 6l-5 6 5 6M15 6l5 6-5 6" />
@@ -472,26 +472,21 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
         screen.style.setProperty('--clip', `${Math.min(Math.max(x - r.left, 0), r.width)}px`);
       });
     };
-    /* Start on Before, with a thin strip of After showing at the right edge
-       as a hint. On a row of phones that strip sits inside the last phone. */
+    /* Start in the middle, half Before and half After, so the new work is
+       on screen even for someone who never drags. */
     let touched = false;
-    const restPosition = () => {
-      const box = el.getBoundingClientRect();
-      const last = screens[screens.length - 1]?.getBoundingClientRect();
-      if (!last || !box.width) return 88;
-      return ((last.right - last.width * 0.14 - box.left) / box.width) * 100;
-    };
+    const restPosition = () => 50;
     const setPos = (v: number) => {
       range.value = String(v);
       update();
     };
 
     /* The nudge: once the slider is mostly in view, the handle glides over to
-       show some of the After, then back. It plays once, stops the moment
+       show more of the After, then back to the middle, so it's clear it moves. It plays once, stops the moment
        someone grabs the slider, and is skipped for reduced motion. */
     const nudge = () => {
       const rest = restPosition();
-      const peek = 50;
+      const peek = 30;
       const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
       const steps = [
         { from: rest, to: peek, ms: 900 },
@@ -516,7 +511,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
 
     const markTouched = () => {
       touched = true;
-      el.classList.add('is-touched'); // fades the "Drag to see after" hint
+      el.classList.add('is-touched'); // fades the "Drag to compare" hint
     };
     range.addEventListener('pointerdown', markTouched);
     range.addEventListener('keydown', markTouched);
@@ -524,7 +519,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
       markTouched();
       update();
     });
-    window.addEventListener('resize', () => (touched ? update() : setPos(restPosition())));
+    window.addEventListener('resize', update);
     setPos(restPosition());
 
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

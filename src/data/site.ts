@@ -46,7 +46,7 @@ export const site = {
   /* The hero wraps on its own, so write it as one sentence or two.
      Around 120–200 characters fills it nicely. */
   hero:
-    'As Lead Product Designer for LG.com, I own the end-to-end process, from research to coded prototypes, using shopper data to help people find the right product.',
+    "I'm Mike, Lead Product Designer for LG.com. I own the end-to-end process, from research to coded prototypes, using shopper data to help people find the right product.",
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
   caseStudyCta: 'For a walkthrough of the end-to-end process, reach out.',
@@ -725,10 +725,10 @@ const lgAiSections: Section[] = [
         title: 'Quick Pick',
         text: 'Finds the TV that matches your watching style, whether gaming, cinematic or high-end design',
       },
-      { icon: 'picture', title: 'Picture quality', text: 'Compared side by side' },
-      { icon: 'gaming', title: 'Gaming performance', text: 'Compared side by side' },
-      { icon: 'audio', title: 'Audio experience', text: 'Compared side by side' },
-      { icon: 'design', title: 'Design', text: 'Compared side by side' },
+      { icon: 'picture', title: 'Picture quality', text: 'How bright each TV gets, and which kind of room it suits best' },
+      { icon: 'gaming', title: 'Gaming performance', text: 'Refresh rate and response time, explained for console and PC play' },
+      { icon: 'audio', title: 'Audio experience', text: 'Speaker channels and sound processing, without the jargon' },
+      { icon: 'design', title: 'Design', text: 'How each TV looks on the wall, from flush mount to wallpaper-thin' },
       { icon: 'shared', title: 'Shared features', text: 'What all the compared products have in common' },
     ],
   },
@@ -778,7 +778,6 @@ export const projects: Project[] = [
     },
     year: '2026',
     cardTitle: "Shoppers couldn't make sense of spec-heavy comparisons",
-    homeCrop: { width: 150, left: 8, top: -22 }, // zoomed in on the AI summary and Quick Pick
     summary: "Spec sheets don't tell shoppers which product is right for them, so we tested a plain-language answer before building it.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
