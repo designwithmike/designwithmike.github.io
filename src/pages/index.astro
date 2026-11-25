@@ -68,9 +68,9 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
             <h2 class="card__title">
               {p.cardTitle ?? shortTitle(p.title)}
             </h2>
-            {/* "View case study" on the left, the year tag pushed to the right */}
+            {/* "Read case study" on the left, the year tag pushed to the right */}
             <div class="card__meta">
-              <span class="label card__cta">View case study <span class="card__arrow">→</span></span>
+              <span class="label card__cta">Read case study <span class="card__arrow">→</span></span>
               <div class="tags">
                 <span class="tag card__tag">{p.year}</span>
               </div>
@@ -312,7 +312,7 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
     background: rgba(255, 255, 255, 0.18);
   }
 
-  /* "View case study" on the left, year tag on the right */
+  /* "Read case study" on the left, year tag on the right */
   .card__meta {
     display: flex;
     align-items: center;
