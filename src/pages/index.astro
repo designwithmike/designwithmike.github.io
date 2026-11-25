@@ -33,7 +33,7 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
                the mailto is the fallback where copying isn't allowed -->
           <a class="label link social" href={`mailto:${site.email}`} data-copy={site.email}>
             <span class="social__icon"><Icon name="duplicate" size={14} /></span>
-            Copy email
+            {site.email}
           </a>
           <!-- About and builds stay on this site, so a plain arrow instead of ↗ -->
           <a class="label link" href="/about">{aboutPage.linkLabel} →</a>
