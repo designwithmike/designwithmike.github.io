@@ -31,8 +31,8 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
         <div class="contact__socials">
           <!-- About and builds stay on this site, so a plain arrow instead of ↗ -->
           <a class="label link" href="/about">{aboutPage.linkLabel} →</a>
-          {site.socials.map((s) => <a class="label link" href={s.href}>{s.label} ↗</a>)}
           <a class="label link" href="/builds">{buildsPage.linkLabel} →</a>
+          {site.socials.map((s) => <a class="label link" href={s.href}>{s.label} ↗</a>)}
         </div>
       </div>
     </section>
