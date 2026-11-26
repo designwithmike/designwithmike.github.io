@@ -101,11 +101,15 @@ export type Build = {
   video?: string;
   /* describes the screenshot for screen readers */
   alt?: string;
-  /* Vertical screenshots floating side by side on a grayscale gradient
-     (the home page hero gradient, in gray). Add one entry per screenshot, with the
+  /* Vertical screenshots floating side by side on a gradient (the home page
+     hero gradient, gray unless `colors` is set). Add one entry per screenshot, with the
      file in /public/builds. With `gradient: true` and no shots yet, three
      empty portrait boxes show where they will go. */
   gradient?: boolean;
+  /* five colors for that gradient, picked from the build's own screens:
+     bottom left glow, top right glow, bottom right glow, then the base
+     from top left to bottom right */
+  colors?: [string, string, string, string, string];
   shots?: { src: string; alt: string }[];
   /* Short looping video snippets (about 7 seconds each, muted) shown as extra
      portrait slots after the screenshots, in the same gradient panel. Files go
@@ -141,6 +145,7 @@ export const builds: Build[] = [
   {
     name: 'Family Hub',
     gradient: true,
+    colors: ['#dc9aa2', '#f1ddb4', '#c5dbc0', '#ebcdd3', '#c5badb'],
     shots: [
       { src: '/builds/family-hub-moms-calendar.jpg', alt: "Family Hub home screen with the weather, a daily summary, local events and the shared family calendar" },
     ],
@@ -150,6 +155,21 @@ export const builds: Build[] = [
     ],
     problem: 'Our family info lived in too many places.',
     fix: 'A webOS family hub app for my LG StanbyME. It shows our color-coded family calendar and has letter flash cards with tracing for my kids. I gave Muse, my AI agent, the job of keeping the board updated. I message Muse to make changes, and it summarizes our day and pulls in local events so we can plan our weekends.',
+  },
+  {
+    name: 'Brain Teasers',
+    gradient: true,
+    colors: ['#8c93c9', '#d6e9ca', '#ecb5a6', '#a3d6c3', '#93b6e3'],
+    /* three 7 second cuts of one video, in order: starting the maze, tracing
+       the path, then getting home and a new maze coming up */
+    shots: [],
+    clips: [
+      { src: '/builds/maze-clip-1.mp4', alt: 'A child walks up to the StanbyME and starts a maze at the top left corner' },
+      { src: '/builds/maze-clip-2.mp4', alt: 'A child tracing a glowing path through the maze with a finger' },
+      { src: '/builds/maze-clip-3.mp4', alt: 'The path reaches the house in the bottom right corner, followed by a high five and a new maze' },
+    ],
+    problem: "My kids' screen time wasn't very productive.",
+    fix: "Brain teaser games for my kids on our LG StanbyME. I took their favorite show and turned it into a maze, and AI built the game. They trace a path with their finger to get the family home, and once they do, a new maze comes up. On hard, getting home takes gas, so they have to figure out the shortest way without running out.",
   },
   {
     name: 'Screenshot Renamer',

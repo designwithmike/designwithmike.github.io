@@ -30,7 +30,10 @@ const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
       {
         builds.map((b) => (
           <article class="build">
-            <div class:list={['build__media', { 'build__media--gradient': shotsFor(b) }]}>
+            <div
+              class:list={['build__media', { 'build__media--gradient': shotsFor(b) }]}
+              style={b.colors?.map((c, i) => `--g${i + 1}:${c}`).join(';')}
+            >
               {shotsFor(b) ? (
                 <div class="shots">
                   {shotsFor(b)!.map((s) =>
@@ -129,15 +132,16 @@ const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
     height: auto;
   }
 
-  /* A grayscale version of the home page hero gradient, as a simple blend
-     (no blur or grain), with vertical screens floating on it */
+  /* A version of the home page hero gradient, as a simple blend (no blur or
+     grain), with vertical screens floating on it. Each build sets its own
+     colors in site.ts; gray is the fallback. */
   .build__media--gradient {
     padding: clamp(16px, 2.5vw, 24px);
     background:
-      radial-gradient(60% 70% at 12% 95%, #2b2b2b 0%, transparent 70%),
-      radial-gradient(55% 60% at 92% 8%, #8c8c8c 0%, transparent 70%),
-      radial-gradient(50% 60% at 72% 95%, #4a4a4a 0%, transparent 70%),
-      linear-gradient(160deg, #a6a6a6 0%, #3a3a3a 100%);
+      radial-gradient(60% 70% at 12% 95%, var(--g1, #2b2b2b) 0%, transparent 70%),
+      radial-gradient(55% 60% at 92% 8%, var(--g2, #8c8c8c) 0%, transparent 70%),
+      radial-gradient(50% 60% at 72% 95%, var(--g3, #4a4a4a) 0%, transparent 70%),
+      linear-gradient(160deg, var(--g4, #a6a6a6) 0%, var(--g5, #3a3a3a) 100%);
     /* keep the gradient out from under the 1px border, otherwise the border
        tints and the bottom edge of the gradient wraps around to the top */
     background-clip: padding-box;
