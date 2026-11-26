@@ -425,11 +425,11 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
   }
 
   /* ----- Personal AI builds box ----- */
-  /* takes whatever height the impact card leaves. A soft version of the
-     colors behind the Family Hub videos, palest behind the words. */
+  /* a fixed height, so the impact card above gets the rest. A soft version
+     of the colors behind the Family Hub videos, palest behind the words. */
   .side {
-    flex: 1 1 0;
-    min-height: 132px;
+    flex: none;
+    height: 140px;
     /* lets the square video size itself from the box's height */
     container-type: size;
     display: flex;
@@ -537,8 +537,6 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
     .side {
       grid-column: span 6;
       order: 1;
-      flex: none;
-      min-height: 220px;
     }
 
     /* the three numbers side by side */
@@ -605,6 +603,36 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
       flex-shrink: 0;
       width: 2.7em;
       font-size: clamp(24px, min(2.2vw, 3.8vh), 38px);
+    }
+  }
+
+  /* On desktop the impact card is the bigger of the two: it takes the height
+     the builds box leaves, split evenly between its three rows. */
+  @media (min-width: 1101px) {
+    .contact {
+      flex: 1 0 auto;
+      padding: clamp(14px, 2.4vh, 24px) 24px 6px;
+    }
+
+    .impact,
+    .impact__list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .impact__item {
+      flex: 1;
+      gap: 16px;
+    }
+
+    .impact__value {
+      font-size: clamp(26px, min(3vw, 5vh), 52px);
+    }
+
+    .impact__label {
+      font-size: clamp(13px, 1vw, 15px);
+      line-height: 1.4;
     }
   }
 </style>

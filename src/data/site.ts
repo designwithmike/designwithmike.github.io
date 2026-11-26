@@ -128,7 +128,7 @@ export const buildsPage = {
   /* the caption and square video in the home page box under Product
      impact. `videoFocus` is which part of the video to show (across, then
      down). */
-  blurb: 'I needed a playground to solve my own pain points',
+  blurb: 'An AI playground to solve my own pain points',
   video: '/builds/family-hub-clip-u.mp4',
   videoFocus: '50% 30%',
 };
