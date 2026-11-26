@@ -403,6 +403,15 @@ const lgNavSections: Section[] = [
     after: '/work/lg-navigation/after.webp',
     ratio: '3 / 2',
   },
+  /* What Mike pushed back on, before the solution */
+  {
+    type: 'text',
+    heading: 'Key decisions',
+    paragraphs: [
+      'The original plan was phased, a visual and content clean-up first, with the full redesign saved for phase 2. I pushed to do the full redesign now.',
+      'To get the PMs aligned, I built a working prototype and had them use it. Once they experienced it, they agreed to the full redesign.',
+    ],
+  },
   {
     type: 'text',
     heading: 'The new navigation',
@@ -763,6 +772,15 @@ const lgAiSections: Section[] = [
       { icon: 'shared', title: 'Shared features', text: 'What all the compared products have in common' },
     ],
   },
+  {
+    type: 'text',
+    heading: 'Key decisions',
+    paragraphs: [
+      "A chatbot was off the table because of technical limits with other chat features on our site. The data didn't support one either. It showed friction in the spec experience, so I focused on that pain point.",
+      "The summary pulls from verified spec sheets, which keeps it grounded. It's only as good as the data behind it, so we continue to monitor and iterate.",
+      'When two TVs are close to the same, it looks at reviews, key features and how marketing positions each one, like cinema lovers versus gamers.',
+    ],
+  },
 ];
 
 /* LG.com package product pages case study. Copy and screenshots are from
@@ -882,6 +900,7 @@ export const projects: Project[] = [
     summary: "LG.com's menu had grown to 238 links, and shoppers were turning to search instead.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Ownership', value: 'Drove alignment with the PMs' },
       { label: 'Team', value: '3 PMs, Engineering, Data analytics' },
       { label: 'Timeline', value: 'About 6 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
@@ -900,6 +919,7 @@ export const projects: Project[] = [
     summary: "Spec sheets don't tell shoppers which product is right for them, so we tested a plain-language answer before building it.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Ownership', value: 'Drove alignment with the PMs' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 3 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
@@ -915,6 +935,7 @@ export const projects: Project[] = [
     summary: 'Shoppers could buy several LG appliances together, but no page showed a package with one total price and a single add to cart, so we built product pages for packages.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Ownership', value: 'Drove alignment with the PMs' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 3 months' },
     ],
@@ -930,6 +951,7 @@ export const projects: Project[] = [
     summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Ownership', value: 'Drove alignment with the PMs' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 6 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
