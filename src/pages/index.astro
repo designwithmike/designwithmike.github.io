@@ -74,11 +74,10 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
       </section>
     </section>
 
-    <!-- Personal AI builds: short write-up with a video beside it -->
+    <!-- Personal AI builds: a caption with a video beside it -->
     <a class="cell side" href="/builds">
       <div class="side__text">
-        <h2 class="label side__heading">{buildsPage.linkLabel}</h2>
-        <p class="side__blurb">{buildsPage.blurb}</p>
+        <h2 class="side__blurb">{buildsPage.blurb}</h2>
         <span class="label side__cta">See builds <span class="side__arrow">→</span></span>
       </div>
       <div class="side__media" aria-hidden="true">
@@ -457,18 +456,12 @@ const shortTitle = (title: string) => title.replace(/^LG\.com\s+/, '');
     padding-left: 4px;
   }
 
-  .side__heading {
-    margin: 0;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-
+  /* same size and weight as the project card titles */
   .side__blurb {
     margin: 0;
-    font-size: 13px;
-    line-height: 17px;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.3;
     font-weight: 300;
-    color: rgba(34, 34, 34, 0.82);
     text-wrap: pretty;
   }
 

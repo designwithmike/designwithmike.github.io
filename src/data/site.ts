@@ -123,12 +123,12 @@ export const buildsPage = {
   /* the short paragraph under that headline */
   context:
     'This is my playground, where I practice and follow my curiosity. Each build is a lightweight fix for something that bugged me. To keep things fast, I design the layouts in code, without design software.',
-  /* the link on the home page and in the footer */
+  /* the link in the footer and on the About page */
   linkLabel: 'Personal AI builds',
-  /* the short write-up and square video in the home page box under Product
+  /* the caption and square video in the home page box under Product
      impact. `videoFocus` is which part of the video to show (across, then
      down). */
-  blurb: 'Outside of work, I build small AI tools to fix my own pain points, like a family hub app for our LG StanbyME.',
+  blurb: 'I needed a playground to solve my own pain points',
   video: '/builds/family-hub-clip-u.mp4',
   videoFocus: '50% 30%',
 };
