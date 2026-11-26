@@ -24,6 +24,7 @@ const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
     </div>
 
     <h1 class="builds__intro">{buildsPage.intro}</h1>
+    <p class="builds__context">{buildsPage.context}</p>
 
     <!-- One row per build: screenshot on the left, the story on the right -->
     <div class="builds__list">
@@ -101,6 +102,15 @@ const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
     font-size: clamp(30px, 3.6vw, 48px);
     line-height: 1.15;
     letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+
+  .builds__context {
+    max-width: 640px;
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 300;
     text-wrap: pretty;
   }
 

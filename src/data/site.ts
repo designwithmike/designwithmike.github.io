@@ -120,8 +120,17 @@ export type Build = {
 export const buildsPage = {
   title: 'Personal AI builds',
   intro: "How I've used AI to solve my own pain points",
+  /* the short paragraph under that headline */
+  context:
+    'This is my playground, where I practice and follow my curiosity. Each build is a lightweight fix for something that bugged me. To keep things fast, I design the layouts in code, without design software.',
   /* the link on the home page and in the footer */
   linkLabel: 'Personal AI builds',
+  /* the short write-up and square video in the home page box under Product
+     impact. `videoFocus` is which part of the video to show (across, then
+     down). */
+  blurb: 'Outside of work, I build small AI tools to fix my own pain points, like a family hub app for our LG StanbyME.',
+  video: '/builds/family-hub-clip-u.mp4',
+  videoFocus: '50% 30%',
 };
 
 /* ----- About page (/about) -----
@@ -131,12 +140,12 @@ export const aboutPage = {
   title: 'About',
   /* the link on the home page and in the footer */
   linkLabel: 'About',
-  headline: 'The question I always come back to is, does it solve the problem?',
+  headline: 'The question I come back to is, does it solve the problem?',
   paragraphs: [
     "I'm the Lead Product Designer for LG.com. I lead a small team of two designers, and we work day to day with stakeholders, PMs, engineering and data analytics.",
-    "I started at LG's agency back in 2014 as an art director and moved into product design in 2018. Since then I've helped build LG's online store from the ground up into a nine-figure business.",
-    "I use Claude end to end. Early on, it helps me pull usability insights from FullStory, make sense of the analytics our data team shares and dig through user testing transcripts. So by the time I'm designing, every iteration is anchored to actual data points.",
-    "From there I build a coded prototype in Claude instead of wiring up Figma frames, so it's basically the front-end experience. Stakeholders get to use it in real time on any device they choose, which makes selling the work a lot easier, and that same prototype ends up being the design handoff.",
+    "I started at LG's agency in 2014 as an art director and moved into product design in 2018. Since then I've helped build LG's online store from the ground up into a nine-figure business.",
+    "I use Claude end to end. Early on, it helps me pull usability insights from FullStory, make sense of the analytics our data team shares and dig through user testing transcripts. So by the time I'm designing, every iteration is anchored to data points.",
+    "From there I build a coded prototype in Claude instead of wiring up Figma frames, so it's the front-end experience. Stakeholders get to use it in real time on any device they choose, which makes selling the work easier, and that same prototype becomes the design handoff.",
     'Outside of work, I build small AI tools to fix my own pain points, like a family hub app for our LG StanbyME.',
   ],
 };
@@ -168,7 +177,7 @@ export const builds: Build[] = [
       { src: '/builds/maze-clip-2.mp4', alt: 'A child tracing a glowing path through the maze with a finger' },
       { src: '/builds/maze-clip-3.mp4', alt: 'The path reaches the house in the bottom right corner, followed by a high five and a new maze' },
     ],
-    problem: "My kids' screen time wasn't very productive.",
+    problem: "My kids' screen time wasn't productive.",
     fix: "Brain teaser games for my kids on our LG StanbyME. I took their favorite show and turned it into a maze, and AI built the game. They trace a path with their finger to get the family home, and once they do, a new maze comes up. On hard, getting home takes gas, so they have to figure out the shortest way without running out.",
   },
   {
@@ -428,7 +437,7 @@ const lgNavSections: Section[] = [
     type: 'text',
     heading: 'Key decisions',
     paragraphs: [
-      'The original plan was phased, a visual and content clean-up first, with the full redesign saved for phase 2. I pushed to do the full redesign now.',
+      'The original plan was phased, a visual and content clean-up first, with the full redesign saved for phase 2. I pushed to do the full redesign from the start.',
       'To get the PMs aligned, I built a working prototype and had them use it. Once they experienced it, they agreed to the full redesign.',
     ],
   },
@@ -486,7 +495,7 @@ const lgNavSections: Section[] = [
       {
         icon: 'search',
         title: 'Exposed search bar',
-        text: 'Search entered directly from the navigation',
+        text: 'Search entered from the navigation',
       },
       {
         icon: 'user',
@@ -674,7 +683,7 @@ const lgMobileSections: Section[] = [
       {
         image: '/work/lg-mobile/breadcrumb.gif',
         frame: '/work/lg-mobile/strip-bg-1.webp',
-        label: 'Shortened breadcrumb opening back up to the full path',
+        label: 'Shortened breadcrumb opening to the full path',
         mediaRatio: '774 / 206',
       },
       {
@@ -694,7 +703,7 @@ const lgMobileSections: Section[] = [
     ],
     stats: [
       { value: '~6%', label: 'Of product page sessions engage with the sticky product nav' },
-      { value: '~6 in 10', label: 'Sticky nav clicks go to Specs, so shoppers get to product details quicker' },
+      { value: '~6 in 10', label: 'Sticky nav clicks go to Specs, a quicker path to product details' },
     ],
   },
   /* Gallery thumbnails and the sticky nav to specs, in use */
@@ -745,7 +754,7 @@ const lgAiSections: Section[] = [
     type: 'text',
     heading: 'The problem',
     paragraphs: [
-      'Comparing products on LG.com was overwhelming. The spec data was a lot to get through, and shoppers had a hard time finding what they needed to make a decision. The data showed real friction in the compare experience, which is why we started exploring solutions. When we dug further into the data, it turned out most shoppers were looking for the same types of information when comparing products.',
+      'Comparing products on LG.com was overwhelming. The spec data was a lot to get through, and shoppers had a hard time finding what they needed to make a decision. The data showed friction in the compare experience, which is why we started exploring solutions. When we dug into the data, we found most shoppers were looking for the same types of information when comparing products.',
     ],
   },
   /* The summary on mobile: scrolling down its rows, then swiping across
@@ -763,7 +772,7 @@ const lgAiSections: Section[] = [
     type: 'text',
     heading: 'The solution',
     paragraphs: [
-      "We weren't sure this would work, so before any engineering investment we simulated the AI summary in an A/B test, starting with the most compared products as a baseline. Working from the insights team's data, we figured out what should go into the AI-generated summary. AI did the heavy lifting from that point, translating spec-heavy information into clear, consumer-friendly comparisons. After a month of testing, the results were hard to ignore. They won leadership's buy-in for the full build, and the feature is now live at scale.",
+      "We weren't sure this would work, so before any engineering investment we simulated the AI summary in an A/B test, starting with the most compared products as a baseline. Working from the insights team's data, we figured out what should go into the AI-generated summary. AI did the heavy lifting from that point, translating spec-heavy information into clear, consumer-friendly comparisons. After a month of testing, the results were hard to ignore. They won leadership's buy-in for the full build, and the feature is live at scale.",
     ],
     stats: [
       { value: '+11.56%', label: 'Add to cart, against the control' },
@@ -796,8 +805,8 @@ const lgAiSections: Section[] = [
     type: 'text',
     heading: 'Key decisions',
     paragraphs: [
-      "A chatbot was off the table because of technical limits with other chat features on our site. The data didn't support one either. It showed friction in the spec experience, so I focused on that pain point.",
-      "The summary pulls from verified spec sheets, which keeps it grounded. It's only as good as the data behind it, so we continue to monitor and iterate.",
+      "A chatbot was off the table because of technical limits with other chat features on our site. The data didn't support one. It showed friction in the spec experience, so I focused on that pain point.",
+      "The summary pulls from verified spec sheets, which keeps it grounded. Its quality depends on the data behind it, so we continue to monitor and iterate.",
       'When two TVs are close to the same, it looks at reviews, key features and how marketing positions each one, like cinema lovers versus gamers.',
     ],
   },
@@ -818,11 +827,11 @@ const lgPackageSections: Section[] = [
     type: 'text',
     heading: 'The problem',
     paragraphs: [
-      'Shoppers could already buy several appliances in one order, but they had to put the package together themselves. There was no page to shop a package with its total price, and that made it hard for the e-commerce team to merchandise bundle deals.',
+      'Shoppers could buy several appliances in one order, but they had to put the package together themselves. There was no page to shop a package with its total price, and that made it hard for the e-commerce team to merchandise bundle deals.',
     ],
     points: [
       { icon: 'store', title: 'Page by page', text: 'Shoppers visited each product page on its own' },
-      { icon: 'cart', title: 'One item at a time', text: 'Every product added to the cart separately' },
+      { icon: 'cart', title: 'One item at a time', text: 'A separate add to cart for every product' },
       { icon: 'name', title: 'No package price', text: 'No single total for the whole package' },
       { icon: 'megaphone', title: 'Hard to merchandise', text: 'No good way to sell bundle deals' },
     ],
@@ -831,10 +840,10 @@ const lgPackageSections: Section[] = [
     type: 'text',
     heading: 'The approach',
     paragraphs: [
-      "This project didn't call for a ground-up redesign, and that was intentional. We had a page shoppers already understood, so the challenge was making it work for multiple products in one purchase.",
+      "This project didn't call for a ground-up redesign, and that was intentional. We had a page shoppers understood, so the challenge was making it work for multiple products in one purchase.",
     ],
     points: [
-      { icon: 'framework', title: 'Proven architecture', text: 'Built on the product page shoppers already knew' },
+      { icon: 'framework', title: 'Proven architecture', text: 'Built on the product page shoppers knew' },
       { icon: 'search', title: 'Pattern research', text: 'Design patterns as the starting point' },
       { icon: 'tested', title: 'Tested with shoppers', text: 'Comprehension validated on UserTesting.com' },
       { icon: 'layers', title: 'Easy to author', text: 'An MVP the merchandising team could set up' },
@@ -901,7 +910,7 @@ const lgPackageSections: Section[] = [
     items: [
       {
         value: '~190',
-        label: 'Appliance packages sold in the first two weeks after launch',
+        label: 'Packages of 3 to 5 appliances sold in the first two weeks after launch',
       },
     ],
   },
@@ -914,10 +923,10 @@ export const projects: Project[] = [
     slug: 'lg-navigation',
     live: { href: 'https://www.lg.com/us/' }, // LG.com home page, where the navigation lives
     year: '2026',
-    cardTitle: 'Shoppers were giving up on the menu and searching instead',
+    cardTitle: 'Shoppers were giving up on the menu and searching',
     homeClipStart: 1.2, // the Appliances menu is already open
     homeZoom: 1.15,
-    summary: "LG.com's menu had grown to 238 links, and shoppers were turning to search instead.",
+    summary: "LG.com's menu had grown to 238 links, and shoppers were turning to search.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Ownership', value: 'Pushed for the full redesign, aligned 3 PMs' },
@@ -949,10 +958,10 @@ export const projects: Project[] = [
     ...placeholderProject(4, 'LG.com Package Product Pages', 200, ['Website']),
     sections: lgPackageSections,
     slug: 'lg-package-pdp',
-    live: { href: 'https://www.lg.com/us/kitchen-appliance-packages/lg-lrflc2716s-lrgl5821s-mvem1621y-ldfn3432t' }, // example package page
+    live: { href: 'https://www.lg.com/us/kitchen-appliance-packages/lg-lf24z6530s-lsgl5833x-mvem1825f-adfd5448at' }, // example package page
     year: '2025',
     cardTitle: "Shoppers couldn't shop an appliance package as one purchase",
-    summary: 'Shoppers could buy several LG appliances together, but no page showed a package with one total price and a single add to cart, so we built product pages for packages.',
+    summary: 'Shoppers could buy several LG appliances in one order, but no page showed a package with one total price and a single add to cart, so we built product pages for packages.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Ownership', value: 'Kept it an MVP merchandising could set up' },
