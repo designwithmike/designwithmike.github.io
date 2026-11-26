@@ -900,7 +900,7 @@ export const projects: Project[] = [
     summary: "LG.com's menu had grown to 238 links, and shoppers were turning to search instead.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
-      { label: 'Ownership', value: 'Drove alignment with the PMs' },
+      { label: 'Ownership', value: 'Pushed for the full redesign, aligned 3 PMs' },
       { label: 'Team', value: '3 PMs, Engineering, Data analytics' },
       { label: 'Timeline', value: 'About 6 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
@@ -919,7 +919,7 @@ export const projects: Project[] = [
     summary: "Spec sheets don't tell shoppers which product is right for them, so we tested a plain-language answer before building it.",
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
-      { label: 'Ownership', value: 'Drove alignment with the PMs' },
+      { label: 'Ownership', value: 'Focused it on specs instead of a chatbot' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 3 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
@@ -935,7 +935,7 @@ export const projects: Project[] = [
     summary: 'Shoppers could buy several LG appliances together, but no page showed a package with one total price and a single add to cart, so we built product pages for packages.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
-      { label: 'Ownership', value: 'Drove alignment with the PMs' },
+      { label: 'Ownership', value: 'Kept it an MVP merchandising could set up' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 3 months' },
     ],
@@ -951,7 +951,7 @@ export const projects: Project[] = [
     summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
-      { label: 'Ownership', value: 'Drove alignment with the PMs' },
+      { label: 'Ownership', value: 'Redesigned the category and product pages' },
       { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 6 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
