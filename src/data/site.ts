@@ -8,7 +8,8 @@
 /* Icon names for callouts: cart, links, duplicate, fold, target, hover,
    grid, filter, megaphone, framework, progressive, search, user, store,
    tap, scan, specs, cards, compare, swipe, gallery, question, sticky, name,
-   pick, picture, gaming, audio, design, shared (set up in Icon.astro) */
+   pick, picture, gaming, audio, design, shared, delivery, alert, info,
+   notify, newtab, package, tested, layers (set up in Icon.astro) */
 type IconName =
   | 'cart'
   | 'links'
@@ -39,14 +40,22 @@ type IconName =
   | 'gaming'
   | 'audio'
   | 'design'
-  | 'shared';
+  | 'shared'
+  | 'delivery'
+  | 'alert'
+  | 'info'
+  | 'notify'
+  | 'newtab'
+  | 'package'
+  | 'tested'
+  | 'layers';
 
 export const site = {
   name: 'Michael Mendez',
   /* The hero wraps on its own, so write it as one sentence or two.
      Around 120–200 characters fills it nicely. */
   hero:
-    "I'm Mike, Lead Product Designer for LG.com. I own the end-to-end process, from research to coded prototypes, using shopper data to help people find the right product.",
+    "I'm Mike, Lead Product Designer for LG.com. I helped build LG's US direct-to-consumer store from scratch and led design for the navigation, mobile and AI experiences that help shoppers find the right LG product.",
   email: 'design.mikemendez@gmail.com',
   /* Closing line at the end of every case study, followed by the email link */
   caseStudyCta: 'For a walkthrough of the end-to-end process, reach out.',
@@ -54,13 +63,27 @@ export const site = {
   socials: [
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mikemendez11' },
   ],
-  /* Big numbers in a strip on the home page, between the intro and the
-     project cards */
+  /* Big numbers in the box beside the intro. Each one links to the case
+     study behind it (`href`). */
   impact: {
     heading: 'Product impact',
     items: [
-      { value: '+8%', label: 'Overall CVR lift from UX optimization' },
-      { value: '+48%', label: 'Site navigation & usability satisfaction' },
+      {
+        value: '+25%',
+        label: 'Conversion with the AI comparison summary, A/B tested',
+        href: '/work/lg-ai-compare',
+      },
+      {
+        value: '+8%',
+        label: 'Conversion after the category, product and checkout redesign',
+        href: '/work/lg-mobile',
+      },
+      {
+        /* 42.6% to 47% is about a 10% lift */
+        value: '+10%',
+        label: 'Menu clicks reaching a product page (42.6% → 47%)',
+        href: '/work/lg-navigation',
+      },
     ],
   },
 };
@@ -667,6 +690,14 @@ const lgMobileSections: Section[] = [
       { value: '1.54% → 4.97%', label: 'Specifications engagement' },
     ],
   },
+  {
+    type: 'stats',
+    heading: 'Results',
+    items: [{ value: '+8%', label: 'Conversion lift, from leadership\'s year-end review' }],
+    paragraphs: [
+      "This work was part of the category, product and checkout redesign that leadership's year-end review credited with an 8% lift in conversion.",
+    ],
+  },
 ];
 
 /* LG.com AI comparison summary case study. Copy is from the AI Comparison
@@ -734,6 +765,110 @@ const lgAiSections: Section[] = [
   },
 ];
 
+/* LG.com package product pages case study. Copy and screenshots are from
+   the Package PDP page on the old Framer site. */
+const lgPackageSections: Section[] = [
+  {
+    type: 'image',
+    label: 'Package product page on LG.com, desktop',
+    ratio: '3 / 2',
+    image: '/work/lg-package-pdp/overview.png',
+    frame: '/work/lg-navigation/frame-bg.webp',
+    mediaRatio: '3072 / 1954',
+  },
+  {
+    type: 'text',
+    heading: 'The problem',
+    paragraphs: [
+      'Shoppers could already buy several appliances in one order, but they had to put the package together themselves. There was no page to shop a package with its total price, and that made it hard for the e-commerce team to merchandise bundle deals.',
+    ],
+    points: [
+      { icon: 'store', title: 'Page by page', text: 'Shoppers visited each product page on its own' },
+      { icon: 'cart', title: 'One item at a time', text: 'Every product added to the cart separately' },
+      { icon: 'name', title: 'No package price', text: 'No single total for the whole package' },
+      { icon: 'megaphone', title: 'Hard to merchandise', text: 'No good way to sell bundle deals' },
+    ],
+  },
+  {
+    type: 'text',
+    heading: 'The approach',
+    paragraphs: [
+      "This project didn't call for a ground-up redesign, and that was intentional. We had a page shoppers already understood, so the challenge was making it work for multiple products in one purchase.",
+    ],
+    points: [
+      { icon: 'framework', title: 'Proven architecture', text: 'Built on the product page shoppers already knew' },
+      { icon: 'search', title: 'Pattern research', text: 'Design patterns as the starting point' },
+      { icon: 'tested', title: 'Tested with shoppers', text: 'Comprehension validated on UserTesting.com' },
+      { icon: 'layers', title: 'Easy to author', text: 'An MVP the merchandising team could set up' },
+    ],
+  },
+  {
+    type: 'image',
+    label: 'The buy rail, with a card for each product in the package',
+    ratio: '3 / 2',
+    image: '/work/lg-package-pdp/product-cards.png',
+    frame: '/work/lg-navigation/frame-bg.webp',
+    mediaRatio: '3072 / 2032',
+  },
+  {
+    type: 'text',
+    heading: "What's in the package",
+    paragraphs: ['The page makes it clear what the package includes and when it arrives.'],
+    points: [
+      { icon: 'cards', title: 'Product cards', text: 'Price and key features for each item in the buy rail' },
+      { icon: 'delivery', title: 'Delivered together', text: 'One delivery message for every item' },
+      { icon: 'newtab', title: 'Details a click away', text: 'Any product page opens in a new tab' },
+    ],
+  },
+  {
+    type: 'image',
+    label: 'An out-of-stock item flagged in the buy rail, with a banner and a Notify Me button',
+    ratio: '3 / 2',
+    image: '/work/lg-package-pdp/out-of-stock.png',
+    frame: '/work/lg-navigation/frame-bg.webp',
+    mediaRatio: '3074 / 2026',
+  },
+  {
+    type: 'text',
+    heading: 'When one item is out of stock',
+    paragraphs: [
+      "A package can't ship incomplete, so if one item goes out of stock the purchase is blocked. The job was making that clear early instead of at checkout.",
+    ],
+    points: [
+      { icon: 'alert', title: 'Flagged item', text: 'The unavailable product is marked in the buy rail' },
+      { icon: 'info', title: 'Banner', text: "Explains why the package can't be bought" },
+      { icon: 'notify', title: 'Notify Me', text: "Shoppers hear when it's back in stock" },
+    ],
+  },
+  {
+    type: 'image',
+    label: 'Sticky nav switching between the products in the package',
+    ratio: '3 / 2',
+    video: '/work/lg-package-pdp/sticky-nav.mp4',
+    frame: '/work/lg-navigation/frame-bg.webp',
+    mediaRatio: '1496 / 1080',
+  },
+  {
+    type: 'text',
+    heading: 'Browsing each product',
+    paragraphs: ['Below the buy rail, shoppers can dig into each product without leaving the page.'],
+    points: [
+      { icon: 'sticky', title: 'Sticky nav', text: 'Switch between the products in the package' },
+      { icon: 'specs', title: 'Specs and reviews', text: 'Browse the details for each one' },
+    ],
+  },
+  {
+    type: 'stats',
+    heading: 'Results',
+    items: [
+      {
+        value: '~190',
+        label: 'Appliance packages sold in the first two weeks after launch',
+      },
+    ],
+  },
+];
+
 export const projects: Project[] = [
   {
     ...placeholderProject(1, 'LG.com Navigation', 232, ['Website', 'Mobile']),
@@ -748,22 +883,6 @@ export const projects: Project[] = [
     details: [
       { label: 'Role', value: 'Lead Product Designer' },
       { label: 'Team', value: '3 PMs, Engineering, Data analytics' },
-      { label: 'Timeline', value: 'About 6 months' },
-      { label: 'Design system', value: 'MUI, with accessibility built in' },
-    ],
-  },
-  {
-    ...placeholderProject(2, 'LG.com Mobile Optimization', 265, ['Mobile', 'Website']),
-    sections: lgMobileSections,
-    slug: 'lg-mobile',
-    live: { href: 'https://www.lg.com/us/tvs/lg-oled77g6wua-oled-4k-tv' }, // example product page
-    year: '2025',
-    cardTitle: 'Mobile shoppers were stuck with pages built for desktop',
-    homeClipStart: 9.6, // the filter menu is already open
-    summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
-    details: [
-      { label: 'Role', value: 'Lead Product Designer' },
-      { label: 'Team', value: 'PM, Engineering, Stakeholders' },
       { label: 'Timeline', value: 'About 6 months' },
       { label: 'Design system', value: 'MUI, with accessibility built in' },
     ],
@@ -786,7 +905,34 @@ export const projects: Project[] = [
       { label: 'Design system', value: 'MUI, with accessibility built in' },
     ],
   },
-  placeholderProject(4, 'Adipiscing Elit', 150, ['Website']),
-  placeholderProject(5, 'Sed Do Eiusmod', 0, ['Website']),
-  placeholderProject(6, 'Tempor Incididunt', 330, ['Mobile', 'Email']),
+  {
+    ...placeholderProject(4, 'LG.com Package Product Pages', 200, ['Website']),
+    sections: lgPackageSections,
+    slug: 'lg-package-pdp',
+    live: { href: 'https://www.lg.com/us/kitchen-appliance-packages/lg-lrflc2716s-lrgl5821s-mvem1621y-ldfn3432t' }, // example package page
+    year: '2025',
+    cardTitle: "Shoppers couldn't shop an appliance package as one purchase",
+    summary: 'Shoppers could buy several LG appliances together, but no page showed a package with one total price and a single add to cart, so we built product pages for packages.',
+    details: [
+      { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Team', value: 'PM, Engineering, Stakeholders' },
+      { label: 'Timeline', value: 'About 3 months' },
+    ],
+  },
+  {
+    ...placeholderProject(2, 'LG.com Mobile Optimization', 265, ['Mobile', 'Website']),
+    sections: lgMobileSections,
+    slug: 'lg-mobile',
+    live: { href: 'https://www.lg.com/us/tvs/lg-oled77g6wua-oled-4k-tv' }, // example product page
+    year: '2025',
+    cardTitle: 'Mobile shoppers were stuck with pages built for desktop',
+    homeClipStart: 9.6, // the filter menu is already open
+    summary: 'Over half of LG.com shoppers were on phones, but the pages they shopped on were built for desktop.',
+    details: [
+      { label: 'Role', value: 'Lead Product Designer' },
+      { label: 'Team', value: 'PM, Engineering, Stakeholders' },
+      { label: 'Timeline', value: 'About 6 months' },
+      { label: 'Design system', value: 'MUI, with accessibility built in' },
+    ],
+  },
 ];

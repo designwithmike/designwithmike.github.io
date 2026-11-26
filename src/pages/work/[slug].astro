@@ -28,9 +28,12 @@ const others = projects
   .map((_, step) => projects[(index + 1 + step) % projects.length])
   .filter((p) => p.slug !== project.slug);
 const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))].slice(0, 2);
+/* the still frame saved next to each clip (same name, .jpg), shown until
+   the video plays and to anything that can't play video */
+const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
 ---
 
-<Base title={project.title}>
+<Base title={project.title} description={project.summary} image={`/og/${project.slug}.jpg`}>
   <!-- the serif used on the home page (Zodiak Thin), for the headline -->
   <Fragment slot="head">
     <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
@@ -71,6 +74,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                   <video
                     class="framed__media"
                     src={s.video}
+                    poster={poster(s.video)}
                     style={mediaStyle}
                     aria-label={s.label}
                     autoplay
@@ -93,6 +97,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                 <video
                   class="media__video"
                   src={s.video}
+                  poster={poster(s.video)}
                   style={`aspect-ratio:${s.ratio ?? '16 / 9'}`}
                   aria-label={s.label}
                   autoplay
@@ -136,6 +141,7 @@ const more = [...others.filter(hasCover), ...others.filter((p) => !hasCover(p))]
                           <video
                             class="pc__shot"
                             src={p.src}
+                            poster={poster(p.src)}
                             aria-label={p.alt}
                             autoplay
                             muted

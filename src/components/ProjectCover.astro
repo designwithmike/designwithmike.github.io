@@ -32,6 +32,9 @@ const cropVars = crop
     ? `--z:${project.homeZoom};`
     : '';
 const shape = fill ? '' : `aspect-ratio:${ratio};`;
+/* the still frame saved next to each clip (same name, .jpg), shown until
+   the video plays and to anything that can't play video */
+const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
 
 /* Phones: the first one large in the middle with the next two smaller on
    either side, tucked behind it. On the "more projects" cards the middle
@@ -58,6 +61,7 @@ const centreWidth = fill ? '' : `--pw:${((0.76 / toNumber(ratio)) * (397 / 837) 
         <video
           class="cover__clip"
           src={`${framed.video}${clipStart}`}
+          poster={poster(framed.video)}
           style={`aspect-ratio:${clipRatio};--r:${toNumber(clipRatio)}`}
           aria-label={framed.label}
           autoplay
@@ -82,7 +86,7 @@ const centreWidth = fill ? '' : `--pw:${((0.76 / toNumber(ratio)) * (397 / 837) 
         <div class:list={['cover__phone', { 'cover__phone--side': p.side }]}>
           <div class="cover__screen">
             {isVideo(p.src) ? (
-              <video class="cover__shot" src={`${p.src}${p.start ? clipStart : ''}`} aria-label={p.alt} autoplay muted loop playsinline preload="metadata" />
+              <video class="cover__shot" src={`${p.src}${p.start ? clipStart : ''}`} poster={poster(p.src)} aria-label={p.alt} autoplay muted loop playsinline preload="metadata" />
             ) : (
               <img class="cover__shot" src={p.src} alt={p.alt} loading="lazy" />
             )}

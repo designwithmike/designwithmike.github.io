@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import { aboutPage, buildsPage } from '../data/site';
 ---
 
-<Base title={aboutPage.title}>
+<Base title={aboutPage.title} description={aboutPage.paragraphs[0]}>
   <!-- the serif used on the home page (Zodiak Thin), for the headline -->
   <Fragment slot="head">
     <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />

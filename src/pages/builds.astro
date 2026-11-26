@@ -7,9 +7,12 @@ import type { Build } from '../data/site';
 /* Builds on the gradient show their vertical screenshots; with none added
    yet, three empty portrait boxes hold the place. */
 const shotsFor = (b: Build) => b.shots ?? (b.gradient ? [null, null, null] : null);
+/* the still frame saved next to each clip (same name, .jpg), shown until
+   the video plays and to anything that can't play video */
+const poster = (src: string) => src.split('#')[0].replace(/\.mp4$/, '.jpg');
 ---
 
-<Base title={buildsPage.title}>
+<Base title={buildsPage.title} description={buildsPage.intro} image="/og/builds.jpg">
   <!-- the serif used on the home page (Zodiak Thin), for the headline -->
   <Fragment slot="head">
     <link href="https://api.fontshare.com/v2/css?f[]=zodiak@100&display=swap" rel="stylesheet" />
@@ -40,11 +43,11 @@ const shotsFor = (b: Build) => b.shots ?? (b.gradient ? [null, null, null] : nul
                     ),
                   )}
                   {b.clips?.map((c) => (
-                    <video class="shot" src={c.src} aria-label={c.alt} autoplay muted loop playsinline preload="metadata" />
+                    <video class="shot" src={c.src} poster={poster(c.src)} aria-label={c.alt} autoplay muted loop playsinline preload="metadata" />
                   ))}
                 </div>
               ) : b.video ? (
-                <video src={b.video} aria-label={b.alt ?? b.name} autoplay muted loop playsinline preload="metadata" />
+                <video src={b.video} poster={poster(b.video)} aria-label={b.alt ?? b.name} autoplay muted loop playsinline preload="metadata" />
               ) : b.image ? (
                 <img src={b.image} alt={b.alt ?? b.name} loading="lazy" />
               ) : (
